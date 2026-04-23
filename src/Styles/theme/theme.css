@@ -1,0 +1,33 @@
+/* theme.css */
+:root {
+  --bg-page:        #F8F9FB;
+  --bg-surface:     #FFFFFF;
+  --bg-section-alt: #F1EFE8;
+  --bg-card:        #FFFFFF;
+  --border:         #D3D1C7;
+  --text-heading:   #0D1117;
+  --text-body:      #5F5E5A;
+  --text-muted:     #888780;
+  --primary:        #185FA5;
+  --accent:         #7F77DD;
+  --highlight:      #EF9F27;
+  --cta-bg:         #0C447C;
+  --text-white:     #EEEDFE;
+  --font-main:      'Inter', sans-serif;
+}
+
+[data-theme="dark"] {
+  --bg-page:        #0D1117;
+  --bg-surface:     #161B22;
+  --bg-section-alt: #161B22;
+  --bg-card:        #1C2128;
+  --border:         #2C2C2A;
+  --text-heading:   #F1EFE8;
+  --text-body:      #B4B2A9;
+  --text-muted:     #5F5E5A;
+  --primary:        #378ADD;
+  --accent:         #7F77DD;
+  --highlight:      #EF9F27;
+  --cta-bg:         #042C53;
+  --text-white:     #EEEDFE;
+}
