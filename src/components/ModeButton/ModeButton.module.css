@@ -1,0 +1,58 @@
+.Mode {
+  border: 0.1rem solid var(--border);
+  background-color: var(--bg-surface);
+  cursor: pointer;
+  border-radius: 2rem;
+  width: 5rem;
+  height: 2rem;
+  transition: transform 0.3s ease;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0.3rem;
+}
+
+.Mode:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.modeButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.8rem;
+  height: 1.35rem;
+  border-radius: 1rem;
+  background-color: var(--accent);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  border: 0;
+  color: var(--text-white);
+}
+
+.modeButtonDark {
+  transform: translateX(2.3rem);
+  background-color: var(--highlight);
+}
+@media(max-width:768px){
+    /* 2. Shrink Dark Mode Toggle */
+  .Mode {
+    width: 3.5rem;    /* Reduced from 5rem */
+    height: 1.6rem;   /* Reduced from 2rem */
+    padding: 0.2rem;
+  }
+
+  .modeButton {
+    width: 1.4rem;    /* Reduced from 1.8rem */
+    height: 1.2rem;   /* Reduced from 1.35rem */
+    font-size: 0.8rem;
+  }
+
+  /* CRITICAL: We must reduce the sliding distance because the track is shorter now */
+  .modeButtonDark {
+    transform: translateX(1.4rem); /* Reduced from 2.3rem */
+  }
+
+}

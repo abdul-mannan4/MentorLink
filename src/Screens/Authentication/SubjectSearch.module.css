@@ -1,0 +1,75 @@
+.input-wrapper {
+  display: flex;
+  flex-wrap: wrap;       /* ← tags wrap to next line if too many */
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  cursor: text;
+  min-height: 42px;
+  position: relative;
+  background: white;
+}
+
+.tag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #e0e7ff;
+  color: #4338ca;
+  font-size: 13px;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+.tag-remove {
+  background: none;
+  border: none;
+  color: #4338ca;
+  cursor: pointer;
+  font-size: 15px;
+  padding: 0;
+  line-height: 1;
+}
+
+.tag-remove:hover{
+    background-color: #4338ca;
+    color: white;
+}
+
+.tag-input {
+  border: none !important;
+  outline: none !important;
+  font-size: 14px;
+  flex: 1;          /* ← takes remaining space */
+  min-width: 80px;
+  background: transparent;
+  padding: 0;
+  box-shadow: none !important;
+}
+
+.list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  margin-top: 4px;
+  z-index: 10;
+  list-style: none;
+  padding: 4px 0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.list li {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.list li:hover {
+  background: #f3f4f6;
+}

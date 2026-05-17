@@ -1,0 +1,43 @@
+.WGcardStyles {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color:var(--bg-card);
+  padding: 1.5rem;
+  
+  /* Flex shorthand: Grow, Shrink, Basis */
+  flex: 1 1 300px; 
+  
+  max-width: 400px; /* Prevents cards from getting too huge on big monitors */
+  text-align: center;
+  box-sizing: border-box;
+  border-radius: 12px;
+}
+.WGnoIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    width: 40px;
+    height: 40px;
+    border-radius:50%;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+
+}
+
+.WGcardTitle {
+    font-weight: 600;
+    color:var(--text-heading);
+    margin: 0 0 0.4rem 0;
+    font-size: 0.95rem;
+}
+
+.WGcardDescription {
+    color: var(--text-body);
+    font-size: 0.85rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+

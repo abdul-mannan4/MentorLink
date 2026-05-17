@@ -1,0 +1,117 @@
+/* Add these aliases to your theme.css because MentorDashboard.module.css
+   uses these variable names. Without them, the CSS module loads but the
+   colors and spacing won't render correctly.
+*/
+
+:root {
+  /* Existing variables */
+  --bg-page: #F8F9FB;
+  --bg-surface: #FFFFFF;
+  --bg-section-alt: #F1EFE8;
+  --bg-card: #FFFFFF;
+  --border: #D3D1C7;
+  --text-heading: #0D1117;
+  --text-body: #5F5E5A;
+  --text-muted: #888780;
+  --primary: #185FA5;
+  --accent: #7F77DD;
+  --highlight: #EF9F27;
+  --cta-bg: #0C447C;
+  --text-white: #EEEDFE;
+  --font-main: 'Inter', sans-serif;
+
+  /* =====================================================
+     Aliases required by MentorDashboard.module.css
+  ====================================================== */
+
+  /* Core colors */
+  --white: #ffffff;
+  --slate-50: var(--bg-page);
+  --slate-100: #f1f5f9;
+  --slate-200: var(--border);
+  --slate-500: var(--text-muted);
+  --slate-600: var(--text-body);
+  --slate-700: #334155;
+  --slate-900: var(--text-heading);
+
+  /* Primary */
+  --primary-light: rgba(24, 95, 165, 0.1);
+  --primary-hover: rgba(24, 95, 165, 0.2);
+  --primary-dark: var(--cta-bg);
+
+  /* Success */
+  --emerald: #059669;
+  --emerald-light: #d1fae5;
+
+  /* Error */
+  --red-50: #fef2f2;
+  --red-100: #fee2e2;
+  --red-600: #dc2626;
+
+  /* Warning */
+  --amber-400: #fbbf24;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.10),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.10),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+  /* Radius */
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-full: 9999px;
+}
+
+[data-theme="dark"] {
+  /* Existing variables */
+  --bg-page: #0D1117;
+  --bg-surface: #161B22;
+  --bg-section-alt: #161B22;
+  --bg-card: #1C2128;
+  --border: #2C2C2A;
+  --text-heading: #F1EFE8;
+  --text-body: #B4B2A9;
+  --text-muted: #5F5E5A;
+  --primary: #378ADD;
+  --accent: #7F77DD;
+  --highlight: #EF9F27;
+  --cta-bg: #042C53;
+  --text-white: #EEEDFE;
+
+  /* Aliases */
+  --white: var(--bg-surface);
+  --slate-50: var(--bg-page);
+  --slate-100: #1e293b;
+  --slate-200: var(--border);
+  --slate-500: var(--text-muted);
+  --slate-600: var(--text-body);
+  --slate-700: #cbd5e1;
+  --slate-900: var(--text-heading);
+
+  --primary-light: rgba(55, 138, 221, 0.12);
+  --primary-hover: rgba(55, 138, 221, 0.22);
+  --primary-dark: var(--cta-bg);
+
+  --emerald: #10b981;
+  --emerald-light: rgba(16, 185, 129, 0.15);
+
+  --red-50: rgba(220, 38, 38, 0.08);
+  --red-100: rgba(220, 38, 38, 0.16);
+  --red-600: #f87171;
+
+  --amber-400: #fbbf24;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.35);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.45);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.65);
+
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-full: 9999px;
+}

@@ -1,0 +1,133 @@
+.mentorCard {
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border, #e2e8f0);
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  width: 100%;
+  max-width: 20rem;
+  min-height: 12rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  position: relative;
+  overflow: hidden;
+}
+
+.mentorCard::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mentorCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-color: transparent;
+}
+
+.mentorCard:hover::before {
+  opacity: 1;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.imageContainer {
+  position: relative;
+}
+
+.mentorImage {
+  border-radius: 50%;
+  height: 4rem;
+  width: 4rem;
+  object-fit: cover;
+  border: 2px solid var(--bg-surface, #ffffff);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.onlineBadge {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 14px;
+  height: 14px;
+  background-color: #10b981;
+  border: 2px solid var(--bg-surface, #ffffff);
+  border-radius: 50%;
+}
+
+.headerInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.userName {
+  color: var(--text-heading, #0f172a);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+}
+
+.rankingBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: rgba(245, 158, 11, 0.1);
+  color: #d97706;
+  padding: 0.25rem 0.5rem;
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.starIcon {
+  fill: #f59e0b;
+  color: #f59e0b;
+}
+
+.descriptionTruncated {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--text-body, #475569);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.cardFooter {
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border-top: 1px solid var(--border, #e2e8f0);
+  padding-top: 1rem;
+}
+
+.seeMoreBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.mentorCard:hover .seeMoreBtn {
+  gap: 0.5rem;
+  color: var(--accent);
+}

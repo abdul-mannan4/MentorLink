@@ -1,0 +1,198 @@
+
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  
+  display: flex;
+  align-items: center; 
+  justify-content: center;
+
+  z-index: 9999; 
+
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  padding: 1rem;
+}
+
+.modalContent {
+  width: 100%;
+  max-width: 500px;
+  
+  /* Use the background from your theme.css */
+  background: var(--bg-card);
+  
+  border: 1px solid var(--border);
+  border-radius: 1.5rem;
+  
+  padding: 2rem;
+  
+  /* Lift it slightly above the visual center for better aesthetics */
+  margin-bottom: 2rem; 
+
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+
+  animation: popIn 0.3s ease-out;
+  
+  font-family: var(--font-main);
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: 1.5rem;
+  text-align: left; /* Aligned left as per modern UI standards */
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+  align-items: flex-start; /* Ensures label starts at the left */
+}
+
+.inputGroup label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.inputField,
+.textField {
+  width: 100%;
+  box-sizing: border-box; /* Crucial for alignment */
+  
+  /* Fixes the "text pushed to the right" issue */
+  text-align: left !important;
+  padding: 0.8rem 1rem; 
+  
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-body);
+  
+  font-size: 1rem;
+  font-family: inherit;
+  
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.inputField:focus,
+.textField:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(24, 95, 165, 0.15);
+}
+
+.textField {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.4;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end; /* Buttons on the right */
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.cancelBtn,
+.submitBtn {
+  padding: 0.7rem 1.5rem;
+  border-radius: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.1s, opacity 0.2s;
+}
+
+.cancelBtn {
+  background: var(--bg-section-alt);
+  color: var(--primary);
+  background-color: transparent;
+}
+.cancelBtn:hover {
+  background: var(--bg-section-alt);
+  color: var(--text-white);
+  ;
+}
+
+.submitBtn {
+  background: var(--primary);
+  color:var(--text-white);
+}
+
+.cancelBtn:hover,
+.submitBtn:hover {
+  opacity: 0.9;
+  background-color: var(--primary);
+}
+
+.submitBtn:active {
+  transform: scale(0.98);
+}
+/* Styling the "Choose File" button specifically */
+.inputField::file-selector-button {
+  background: var(--highlight);
+  color: white; /* Or var(--text-white) */
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  margin-right: 1rem;
+  font-family: inherit;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.inputField::file-selector-button:hover {
+  opacity: 0.8;
+}
+
+/* Optional: Make the input text color look consistent */
+.inputField[type="file"] {
+  padding: 0.5rem; /* Slightly less padding for file inputs */
+  line-height: 1.5;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Mobile check */
+@media (max-width: 480px) {
+  .modalContent {
+    padding: 1.5rem;
+    margin-bottom: 0; /* Center fully on small mobile screens */
+  }
+  
+  .formActions {
+    flex-direction: column-reverse;
+  }
+  
+  .cancelBtn, .submitBtn {
+    width: 100%;
+  }
+}
