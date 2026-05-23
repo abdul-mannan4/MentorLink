@@ -1,0 +1,181 @@
+/* Page Layout */
+.mentor-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8fafc;
+  /* slate-50 */
+  font-family: "Inter", sans-serif;
+}
+
+/* Navbar */
+.mentor-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding: 0 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  /* slate-200 */
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.mentor-navbar-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  height: 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mentor-logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary, #0f172a);
+  letter-spacing: -0.025em;
+  text-decoration: none;
+}
+
+.mentor-back-link {
+  color: #475569;
+  /* slate-600 */
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.mentor-back-link:hover {
+  color: #0f172a;
+  /* slate-900 */
+}
+
+/* Main Content */
+.mentor-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+}
+
+/* Card */
+.mentor-card {
+  width: 100%;
+  max-width: 448px;
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  border: 1px solid #f1f5f9;
+  /* slate-100 */
+  text-align: center;
+}
+
+/* Title */
+.mentor-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #0f172a;
+  /* slate-900 */
+  margin-bottom: 1.5rem;
+}
+
+/* Description */
+.mentor-description {
+  color: #475569;
+  /* slate-600 */
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+/* Form */
+.mentor-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Form Field */
+.mentor-field {
+  text-align: left;
+}
+
+.mentor-field-last {
+  margin-bottom: 1.5rem;
+}
+
+/* Label */
+.mentor-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #334155;
+  /* slate-700 */
+  margin-bottom: 0.5rem;
+}
+
+/* Input */
+.mentor-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  /* slate-200 */
+  border-radius: 1rem;
+  font-size: 1rem;
+  color: #0f172a;
+  background-color: #ffffff;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.mentor-input::placeholder {
+  color: #94a3b8;
+  /* slate-400 */
+}
+
+.mentor-input:focus {
+  border-color: var(--primary, #2563eb);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Submit Button */
+.mentor-submit-btn {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: var(--primary, #2563eb);
+  color: #ffffff;
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+.mentor-submit-btn:hover:not(:disabled) {
+  background-color: var(--accent, #1d4ed8);
+}
+
+.mentor-submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .mentor-card {
+    padding: 1.5rem;
+  }
+
+  .mentor-title {
+    font-size: 1.25rem;
+  }
+}

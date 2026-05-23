@@ -1,0 +1,257 @@
+.profileRoot {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #eff6ff 0%, #ffffff 70%);
+  padding: 2rem 1rem 4rem;
+}
+
+.profileHeaderBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.backButton,
+.homeLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.2rem;
+  border-radius: 999px;
+  border: 1px solid rgba(59, 130, 246, 0.18);
+  background: #ffffff;
+  color: #2563eb;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.backButton:hover,
+.homeLink:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.12);
+}
+
+.loadingState,
+.errorCard {
+  max-width: 60rem;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  text-align: center;
+  color: #0f172a;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
+}
+
+.profileCard {
+  max-width: 74rem;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 2rem;
+  padding: 2rem;
+  box-shadow: 0 30px 70px rgba(15, 23, 42, 0.08);
+}
+
+.profileTop {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.profileImage {
+  width: 9.5rem;
+  height: 9.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 6px solid rgba(59, 130, 246, 0.15);
+  background: #f8fafc;
+}
+
+.profileSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.profileTitleRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.profileRole {
+  margin: 0 0 0.5rem;
+  color: #2563eb;
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.profileName {
+  margin: 0;
+  font-size: clamp(2rem, 2.4vw, 3rem);
+  line-height: 1.05;
+}
+
+.profileStatsRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.profileStatInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.rankBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(254, 221, 0, 0.15);
+  color: #92400e;
+  padding: 0.5rem 0.75rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.rankIcon {
+  color: #f59e0b;
+}
+
+.statLabel {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.statValue {
+  font-size: 1rem;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.statSeparator {
+  color: #cbd5e1;
+}
+
+.profileAbout {
+  margin: 0;
+  color: #475569;
+  font-size: 1rem;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.statCard {
+  background: #eff6ff;
+  border-radius: 1.5rem;
+  padding: 1.15rem 1.25rem;
+}
+
+.statLabel {
+  display: block;
+  font-size: 0.82rem;
+  color: #475569;
+  margin-bottom: 0.6rem;
+}
+
+.statValue {
+  font-size: 1.7rem;
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.aboutSection,
+.expertiseSection {
+  margin-top: 2rem;
+}
+
+.sectionHeadingRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.aboutSection h2,
+.expertiseSection h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.aboutSection p {
+  margin: 0.5rem 0 0;
+  color: #475569;
+  font-size: 1rem;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.sectionHeadingRow span {
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.chipList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.chip {
+  background: rgba(59, 130, 246, 0.12);
+  color: #1d4ed8;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.emptyText {
+  color: #64748b;
+}
+
+@media (max-width: 860px) {
+  .profileTop {
+    grid-template-columns: 1fr;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .profileRoot {
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  .profileHeaderBar {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .backButton,
+  .homeLink {
+    width: 100%;
+    max-width: 280px;
+    justify-content: center;
+  }
+}
