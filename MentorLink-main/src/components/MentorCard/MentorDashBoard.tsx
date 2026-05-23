@@ -83,19 +83,7 @@ export default function MentorDashboard() {
     }
   }, [navigate]);
 
-  // Lock history to prevent browser back / swipe-back navigation from leaving the dashboard
-  useEffect(() => {
-    window.history.pushState(null, "", window.location.pathname);
 
-    const handlePopState = () => {
-      window.history.pushState(null, "", window.location.pathname);
-    };
-
-    window.addEventListener("popstate", handlePopState);
-    return () => {
-      window.removeEventListener("popstate", handlePopState);
-    };
-  }, []);
 
   const handleSwitchToStudent = () => {
     sessionStorage.setItem("activeMode", "student");

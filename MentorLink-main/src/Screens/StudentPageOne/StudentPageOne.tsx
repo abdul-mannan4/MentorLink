@@ -155,13 +155,32 @@ const StudentPageOne = () => {
     }
   }, [navigate]);
 
-  const handleSwitchToMentor = () => {
+  const handleSwitchToMentor = async () => {
     if (isMentor) {
       sessionStorage.setItem("activeMode", "mentor");
       navigate("/mentor-dashboard", { replace: true });
-    } else {
-      navigate("/mentor-profile", { replace: true });
+      return;
     }
+
+    // Double check database in case of cache delay/miss
+    const { data: authData } = await supabase.auth.getUser();
+    if (authData?.user) {
+      const { data: mentorCheck } = await supabase
+        .from("mentor")
+        .select("mentor_id")
+        .eq("mentor_id", authData.user.id)
+        .maybeSingle();
+
+      if (mentorCheck) {
+        setIsMentor(true);
+        setCache("isMentor", true);
+        sessionStorage.setItem("activeMode", "mentor");
+        navigate("/mentor-dashboard", { replace: true });
+        return;
+      }
+    }
+
+    navigate("/mentor-profile", { replace: true });
   };
 
   useEffect(() => {
