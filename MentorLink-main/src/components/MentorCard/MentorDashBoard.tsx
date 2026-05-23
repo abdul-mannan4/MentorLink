@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getCache, setCache } from "../../utils/cache";
 import { motion, AnimatePresence } from "framer-motion";
@@ -54,6 +54,7 @@ const groq = groqApiKey ? new Groq({
 
 export default function MentorDashboard() {
   const navigate = useNavigate();
+  const switchingRef = useRef(false);
   const [activeMode, setActiveMode] = useState<string | null>(null);
 
   const [subjects, setSubjects] = useState<Subject[]>([]);
@@ -83,9 +84,30 @@ export default function MentorDashboard() {
     }
   }, [navigate]);
 
+  useEffect(() => {
+    // Push dummy state to capture back button/swipes if not already present
+    if (!window.history.state || !window.history.state.isDummyMentorDashboard) {
+      window.history.pushState({ isDummyMentorDashboard: true }, "", window.location.href);
+    }
 
+    const handlePopState = (event: PopStateEvent) => {
+      if (switchingRef.current) {
+        navigate("/student", { replace: true });
+        return;
+      }
+      // Re-push dummy state to block going back
+      window.history.pushState({ isDummyMentorDashboard: true }, "", window.location.href);
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [navigate]);
 
   const handleSwitchToStudent = () => {
+    switchingRef.current = true;
     sessionStorage.setItem("activeMode", "student");
     navigate("/student", { replace: true });
   };
