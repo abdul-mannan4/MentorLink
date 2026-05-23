@@ -43,7 +43,9 @@ class MockBuilder {
   }
 
   select(columns = "*", options?: any) {
-    this.method = "select";
+    if (this.method !== "insert" && this.method !== "update" && this.method !== "upsert" && this.method !== "delete") {
+      this.method = "select";
+    }
     this.columns = columns;
     this.options = options;
     return this;

@@ -221,3 +221,34 @@
     font-size: 0.85rem;
   }
 }
+
+.dropdownList {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  max-height: 200px;
+  overflow-y: auto;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+  box-shadow: var(--shadow-md);
+}
+
+.dropdownItem {
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  color: var(--text-body);
+  font-size: 0.95rem;
+  text-align: left;
+  transition: background-color 0.15s;
+}
+
+.dropdownItem:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+}

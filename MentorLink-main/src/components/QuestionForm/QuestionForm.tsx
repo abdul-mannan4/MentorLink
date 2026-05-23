@@ -71,6 +71,7 @@ type Props = {
 
 const AskQuestionForm = ({ isOpen, onClose }: Props) => {
   const [subject, setSubject] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
   const [topic, setTopic] = useState("");
   const [teacherName, setTeacherName] = useState("");
   const [description, setDescription] = useState("");
@@ -116,6 +117,7 @@ const AskQuestionForm = ({ isOpen, onClose }: Props) => {
     const { data: authData, error: authError } = await supabase.auth.getUser();
     if (authError || !authData?.user) {
       console.error("User not found. Please log in again.");
+      setError("User not found. Please log in again.");
       setLoading(false);
       return;
     }
@@ -134,7 +136,7 @@ const AskQuestionForm = ({ isOpen, onClose }: Props) => {
 
       if (uploadError) {
         console.error("Upload Error:", uploadError.message);
-        console.error(`File upload failed: ${uploadError.message}`);
+        setError(`File upload failed: ${uploadError.message}`);
         setLoading(false);
         return;
       }
@@ -159,7 +161,7 @@ const AskQuestionForm = ({ isOpen, onClose }: Props) => {
 
     if (error) {
       console.error("Insert Error:", error.message);
-      console.error(`Failed to post question: ${error.message}`);
+      setError(`Failed to post question: ${error.message}`);
       setLoading(false);
       return;
     }
@@ -194,28 +196,50 @@ const AskQuestionForm = ({ isOpen, onClose }: Props) => {
     window.location.reload();
   };
 
+  const filteredSubjects = subjects.filter((sub) =>
+    sub.toLowerCase().includes(subject.toLowerCase())
+  );
+
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         <h2 className={styles.title}>Ask a Question</h2>
         <form className={styles.form} onSubmit={handleSubmit}>
-          <div className={styles.inputGroup}>
+          <div className={styles.inputGroup} style={{ position: "relative" }}>
             <label htmlFor="subjectInput">Subject</label>
             <input
               id="subjectInput"
-              list="subjectOptions"
               type="text"
               placeholder="Search subject..."
               className={styles.inputField}
               value={subject}
-              onChange={(e) => setSubject(e.target.value)}
+              onChange={(e) => {
+                setSubject(e.target.value);
+                setShowDropdown(true);
+              }}
+              onFocus={() => setShowDropdown(true)}
+              onBlur={() => {
+                // Delay closing the dropdown so that the click/mousedown selection can fire first
+                setTimeout(() => setShowDropdown(false), 200);
+              }}
               autoComplete="off"
             />
-            <datalist id="subjectOptions">
-              {subjects.map((sub, i) => (
-                <option key={i} value={sub} />
-              ))}
-            </datalist>
+            {showDropdown && filteredSubjects.length > 0 && (
+              <ul className={styles.dropdownList}>
+                {filteredSubjects.map((sub, i) => (
+                  <li
+                    key={i}
+                    className={styles.dropdownItem}
+                    onMouseDown={() => {
+                      setSubject(sub);
+                      setShowDropdown(false);
+                    }}
+                  >
+                    {sub}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           <div className={styles.inputGroup}>
