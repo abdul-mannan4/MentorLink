@@ -95,8 +95,13 @@ export default function MentorDashboard() {
         navigate("/student", { replace: true });
         return;
       }
-      // Re-push dummy state to block going back
-      window.history.pushState({ isDummyMentorDashboard: true }, "", window.location.href);
+      
+      // If swipe or back/forward button changed the URL, redirect back to dashboard
+      if (window.location.pathname !== "/mentor-dashboard") {
+        navigate("/mentor-dashboard", { replace: true });
+      } else {
+        window.history.pushState({ isDummyMentorDashboard: true }, "", window.location.href);
+      }
     };
 
     window.addEventListener("popstate", handlePopState);
