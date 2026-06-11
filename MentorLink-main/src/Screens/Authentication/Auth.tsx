@@ -158,6 +158,8 @@ function Auth({ onClose }: Props) {
             <div className={style.inputForm}>
               <input
                 type="email"
+                name="email"
+                autoComplete="email"
                 placeholder={`e.g. ${EXAMPLE_EMAIL}`}
                 value={email}
                 onChange={handleEmailChange}
@@ -167,6 +169,8 @@ function Auth({ onClose }: Props) {
               <div className={style.passwordWrapper}>
                 <input
                   type={showPassword ? "text" : "password"}
+                  name="password"
+                  autoComplete={isSignUp ? "new-password" : "current-password"}
                   placeholder="Password (min 8 characters)"
                   value={password}
                   onChange={handlePasswordChange}
