@@ -405,7 +405,10 @@
     font-size: 0.7rem;
     margin: 0 0.2rem;
   }
-
+  .LandingNavbar {
+    padding: 0.8rem 0.5rem;
+    /* Less padding on the sides of the bar */
+  }
   .navActions {
     gap: 4px;
     /* Pack them tighter */
