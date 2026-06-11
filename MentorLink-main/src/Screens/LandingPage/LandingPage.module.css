@@ -256,7 +256,6 @@
   justify-content: center;
   padding: 10px;
   box-sizing: border-box;
-  
 }
 .innerLine {
   width: 80%;
@@ -268,39 +267,22 @@
 .statsSection {
   width: 100%;
   background: linear-gradient(135deg, var(--bg-page) 0%, var(--bg-surface) 100%);
-  padding: 3rem 0 2rem 0;
+  padding: 3rem 1rem 2rem 1rem;
   font-family: var(--font-main);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
-.visionHeader {
-  color: var(--accent);
-  margin: 0;
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  margin-bottom: 0.8rem;
-}
+
 .visionTitle {
-  color: var(--text-heading);
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 700;
-  margin: 0 1 0.5rem 0;
+  margin: 0 0 2.5rem 0;
   background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-align: center;
-}
-.visionSubtitle {
-  color: var(--text-body);
-  font-size: 1rem;
-  font-weight: 400;
-  margin: 0 0 2rem 0;
-  text-align: center;
-  max-width: 600px;
+  letter-spacing: 0.05em;
 }
 .statsContainer {
   display: flex;
@@ -309,24 +291,39 @@
   max-width: 1000px;
   margin: 0 auto;
   width: 100%;
+  gap: 2rem;
+  flex-wrap: wrap;
 }
 .statItem {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  padding: 1.5rem 1rem;
+  border-radius: 0.8rem;
+  background-color: var(--bg-page);
+  border: 1px solid var(--border);
+  transition: all 0.3s ease;
+  flex: 1;
+  min-width: 150px;
+}
+.statItem:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary);
 }
 .statNumber {
   font-size: 2.2rem;
   font-weight: 700;
   margin: 0;
   line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 .statLabel {
   font-size: 0.95rem;
   color: var(--text-body);
   font-weight: 500;
-  margin-top: 5px;
+  margin-top: 8px;
 }
 .statPrimary  { color: var(--primary); }
 .statSecondary { color: var(--accent); }
