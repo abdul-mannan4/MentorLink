@@ -16,32 +16,47 @@ function Auth({ onClose }: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [emailError, setEmailError] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
+  const EMAIL_PATTERN = /^(2[0-9])ntucsfl\d{4}@student\.ntu\.edu\.pk$/;
+  const EXAMPLE_EMAIL = "23ntucsfl1003@student.ntu.edu.pk";
+
   function isValidStudentEmail(email: string) {
-  const regex = /^(2[0-9])ntucsfl\d{4}@student\.ntu\.edu\.pk$/;
-  return regex.test(email);
-}
+    return EMAIL_PATTERN.test(email);
+  }
+
+  function handleEmailChange(e: ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value;
+    setEmail(value);
+    
+    // Real-time validation feedback
+    if (value && !isValidStudentEmail(value)) {
+      setEmailError(`Email should match pattern: ${EXAMPLE_EMAIL}`);
+    } else {
+      setEmailError("");
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setErrorMessage("");
 
+    // Validate email for both sign-up and sign-in
+    if (!email || !isValidStudentEmail(email)) {
+      setErrorMessage(
+        `Invalid email format. Please use: ${EXAMPLE_EMAIL}`
+      );
+      setLoading(false);
+      return;
+    }
+
     if (isSignUp) {
-
-    if (!isValidStudentEmail(email)) {
-    setErrorMessage(
-      "Invalid email format. Use: 23ntucsfl1003@student.ntu.edu.pk"
-    );
-    setLoading(false);
-    return;
-  }
-
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -57,7 +72,7 @@ function Auth({ onClose }: Props) {
       }
 
       if (data?.user?.identities?.length === 0) {
-        setErrorMessage("Email already registered.Please sign in.");
+        setErrorMessage("Email already registered. Please sign in.");
         setLoading(false);
         return;
       }
@@ -98,12 +113,11 @@ function Auth({ onClose }: Props) {
             <div className={style.inputForm}>
               <input
                 type="email"
-                placeholder="e.g. 23ntucsfl1000@student.edu.pk"
+                placeholder={`e.g. ${EXAMPLE_EMAIL}`}
                 value={email}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setEmail(e.target.value)
-                }
+                onChange={handleEmailChange}
               />
+              {emailError && <p className={style.error}>{emailError}</p>}
 
               <div className={style.passwordWrapper}>
                 <input
