@@ -146,6 +146,18 @@
   .questionList {
     grid-template-columns: 1fr;
   }
+  .searchInput {
+  width: 100%;
+  /* max-width: 22rem; */
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background-color: var(--bg-page);
+  padding: 0.95rem 1.1rem;
+  color: var(--text-body);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
 }
 
 @media (max-width: 520px) {
