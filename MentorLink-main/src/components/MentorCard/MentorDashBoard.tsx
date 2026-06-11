@@ -354,12 +354,36 @@ export default function MentorDashboard() {
     });
     const now = new Date().toISOString();
     try {
-      const { error } = await supabase
+      // Fetch the current score for this subject
+      const { data: existingData, error: fetchError } = await supabase
         .from("mentor_subjects")
-        .update({ marks, test_taken_at: now })
+        .select("marks")
         .eq("mentor_id", userId)
-        .eq("course_name", activeTask);
-      if (error) throw error;
+        .eq("course_name", activeTask)
+        .single();
+
+      if (fetchError && fetchError.code !== "PGRST116") throw fetchError;
+
+      // Only update if new score is better than existing score
+      const existingMarks = existingData?.marks ?? -1;
+      if (marks > existingMarks) {
+        const { error } = await supabase
+          .from("mentor_subjects")
+          .update({ marks, test_taken_at: now })
+          .eq("mentor_id", userId)
+          .eq("course_name", activeTask);
+        if (error) throw error;
+      } else if (marks === existingMarks) {
+        // If score is the same, just update the timestamp
+        const { error } = await supabase
+          .from("mentor_subjects")
+          .update({ test_taken_at: now })
+          .eq("mentor_id", userId)
+          .eq("course_name", activeTask);
+        if (error) throw error;
+      }
+      // If new score is lower, don't update anything
+
       setScoreSummary({ score: marks, total: testData.questions.length });
     } catch (err) {
       console.error("Error updating marks:", err);
