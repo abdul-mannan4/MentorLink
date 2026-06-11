@@ -163,6 +163,8 @@ const LandingPage = () => {
 
           <div className={`${style.statsSection} hidden`}>
             <p className={`${style.visionHeader} hidden`}>VISION</p>
+            <h2 className={`${style.visionTitle} hidden`}>Our Mission & Vision</h2>
+            <p className={`${style.visionSubtitle} hidden`}>Connecting students with verified mentors to unlock their academic potential through personalized guidance and expert support.</p>
             <div className={style.statsContainer}>
               <div className={`${style.statItem} hidden`}>
                 <p className={`${style.statNumber} ${style.statPrimary}`}>
