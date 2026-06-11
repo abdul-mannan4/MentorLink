@@ -105,34 +105,59 @@ function MentorProfileCompletion() {
       return;
     }
 
-    // DELETE OLD SUBJECTS (if any) AND INSERT NEW ONES
-    const { error: deleteError } = await supabase
+    // Fetch currently registered subjects for this mentor
+    const { data: currentSubjects, error: fetchSubjectsError } = await supabase
       .from("mentor_subjects")
-      .delete()
+      .select("course_name")
       .eq("mentor_id", userData.user.id);
 
-    if (deleteError) {
-      console.log("Delete subjects error:", deleteError.message);
-      console.error("Error preparing subjects: " + deleteError.message);
+    if (fetchSubjectsError) {
+      console.log("Fetch subjects error:", fetchSubjectsError.message);
+      console.error("Error checking existing subjects: " + fetchSubjectsError.message);
       setLoading(false);
       return;
     }
 
-    const subjectsToInsert = expertSubjects.map((subject) => ({
-      mentor_id: userData.user.id,
-      course_name: subject,
-      marks: -1,
-    }));
+    const existingSubjectNames = (currentSubjects || []).map((s: any) => s.course_name);
 
-    const { error: subjectError } = await supabase
-      .from("mentor_subjects")
-      .insert(subjectsToInsert);
+    // Identify subjects that were removed (exist in DB but not in expertSubjects)
+    const subjectsToDelete = existingSubjectNames.filter((s: string) => !expertSubjects.includes(s));
 
-    if (subjectError) {
-      console.log("Insert mentor subjects error:", subjectError.message);
-      console.error("Error saving subjects: " + subjectError.message);
-      setLoading(false);
-      return;
+    // Identify subjects that are new (exist in expertSubjects but not in DB)
+    const subjectsToInsert = expertSubjects
+      .filter((s) => !existingSubjectNames.includes(s))
+      .map((subject) => ({
+        mentor_id: userData.user.id,
+        course_name: subject,
+        marks: -1,
+      }));
+
+    if (subjectsToDelete.length > 0) {
+      const { error: deleteError } = await supabase
+        .from("mentor_subjects")
+        .delete()
+        .eq("mentor_id", userData.user.id)
+        .in("course_name", subjectsToDelete);
+
+      if (deleteError) {
+        console.log("Delete subjects error:", deleteError.message);
+        console.error("Error removing old subjects: " + deleteError.message);
+        setLoading(false);
+        return;
+      }
+    }
+
+    if (subjectsToInsert.length > 0) {
+      const { error: subjectError } = await supabase
+        .from("mentor_subjects")
+        .insert(subjectsToInsert);
+
+      if (subjectError) {
+        console.log("Insert mentor subjects error:", subjectError.message);
+        console.error("Error saving new subjects: " + subjectError.message);
+        setLoading(false);
+        return;
+      }
     }
 
     setLoading(false);
