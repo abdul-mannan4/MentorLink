@@ -68,15 +68,9 @@ const StudentDashboard = () => {
     const loadQuestions = async () => {
       try {
         setError(null); // Clear errors out before initiating lookups
-        const cached = getCache("studentDashboardQuestions");
-        if (cached) {
-          setQuestions(cached);
-          setLoading(false);
-          return;
-        }
-
         setLoading(true);
         const { data: authData } = await supabase.auth.getUser();
+        console.log("StudentDashboard: authData user:", authData?.user);
         if (!authData?.user) {
           setError("User not authenticated.");
           setLoading(false);
@@ -89,11 +83,12 @@ const StudentDashboard = () => {
           .eq("student_id", authData.user.id)
           .order("uploaded_at", { ascending: false });
 
+        console.log("StudentDashboard: query data:", data, "error:", supabaseError);
+
         if (supabaseError) {
           setError("Unable to load questions. Please refresh.");
         } else if (data) {
           setQuestions(data as Question[]);
-          setCache("studentDashboardQuestions", data);
         }
       } catch (err) {
         setError("An unexpected network error occurred.");
@@ -150,6 +145,8 @@ const StudentDashboard = () => {
           <p className={styles.statusText}>Loading questions...</p>
         ) : error && questions.length === 0 ? (
           <p className={styles.statusText}>{error}</p>
+        ) : questions.length === 0 ? (
+          <p className={styles.statusText}>You haven't posted any questions yet.</p>
         ) : filtered.length === 0 ? (
           <p className={styles.statusText}>No questions found matching your search.</p>
         ) : (
