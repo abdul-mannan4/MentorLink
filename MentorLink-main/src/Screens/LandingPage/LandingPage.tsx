@@ -162,6 +162,7 @@ const LandingPage = () => {
           </div>
 
           <div className={`${style.statsSection} hidden`}>
+            <p className={`${style.featureSectionLine1} hidden`}>VISION</p>
             <div className={style.statsContainer}>
               <div className={`${style.statItem} hidden`}>
                 <p className={`${style.statNumber} ${style.statPrimary}`}>
@@ -172,7 +173,7 @@ const LandingPage = () => {
 
               <div className={`${style.statItem} hidden`}>
                 <p className={`${style.statNumber} ${style.statSecondary}`}>
-                  3.4k+
+                  4k+
                 </p>
                 <p className={style.statLabel}>Mentors</p>
               </div>
