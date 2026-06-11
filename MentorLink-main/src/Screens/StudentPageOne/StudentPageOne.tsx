@@ -372,11 +372,6 @@ const StudentPageOne = () => {
 
   useEffect(() => {
     const fetchTopMentors = async () => {
-      const cached = getCache("topMentors");
-      if (cached) {
-        setMentors(cached);
-        return;
-      }
       setMentorsLoading(true);
       try {
         const { data: mentorRows, error: mentorError } = await supabase
@@ -445,7 +440,6 @@ const StudentPageOne = () => {
 
         mentorList.sort((a, b) => (a.rank ?? 999) - (b.rank ?? 999));
         setMentors(mentorList);
-        setCache("topMentors", mentorList);
       } catch (error) {
         console.error("Unable to fetch top mentors", error);
       } finally {

@@ -247,11 +247,6 @@ export default function MentorDashboard() {
   };
 
   const fetchMentorRank = async (currentUserId: string): Promise<void> => {
-    const cached = getCache("mentorRank");
-    if (cached) {
-      setMentorRank(cached);
-      return;
-    }
     try {
       const [{ data: replies }, { data: subjs }, { data: globalMentors }] = await Promise.all([
         supabase.from("reply").select("mentor_id").eq("mentor_id", currentUserId),
@@ -262,8 +257,9 @@ export default function MentorDashboard() {
       const safeSubjects = subjs ?? [];
       const totalReplies = replies?.length ?? 0;
 
-      const avgScore = safeSubjects.length > 0
-        ? safeSubjects.reduce((sum: number, s: any) => sum + (s.marks >= 0 ? s.marks : 0), 0) / safeSubjects.length
+      const completedTests = safeSubjects.filter(s => s.marks >= 0);
+      const avgScore = completedTests.length > 0
+        ? completedTests.reduce((sum: number, s: any) => sum + s.marks, 0) / completedTests.length
         : 0;
 
       const points = (avgScore * 8) + (totalReplies * 4) + (Math.log1p(totalReplies) * 5);
@@ -304,7 +300,6 @@ export default function MentorDashboard() {
           total_replies: totalReplies,
         };
         setMentorRank(rankObj);
-        setCache("mentorRank", rankObj);
         return;
       }
 
@@ -314,7 +309,6 @@ export default function MentorDashboard() {
         total_replies: totalReplies,
       };
       setMentorRank(rankObj);
-      setCache("mentorRank", rankObj);
     } catch (err) {
       console.error("Error fetching mentor rank:", err);
     }
