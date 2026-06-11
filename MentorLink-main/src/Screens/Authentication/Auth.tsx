@@ -17,14 +17,15 @@ function Auth({ onClose }: Props) {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
-  const EMAIL_PATTERN = /^[0-9]ntucsfl\d{4}@student\.ntu\.edu\.pk$/;
-  const EXAMPLE_EMAIL = "20ntucsfl1000@student.ntu.edu.pk";
+  const EMAIL_PATTERN = /^[0-9]{2}ntucsfl\d{4}@student\.ntu\.edu\.pk$/;
+  const EXAMPLE_EMAIL = "23ntucsfl1003@student.ntu.edu.pk";
 
   function isValidStudentEmail(email: string) {
     return EMAIL_PATTERN.test(email);
@@ -42,6 +43,18 @@ function Auth({ onClose }: Props) {
     }
   }
 
+  function handlePasswordChange(e: ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value;
+    setPassword(value);
+    
+    // Real-time validation feedback for sign-up only
+    if (isSignUp && value && value.length < 8) {
+      setPasswordError("Password must be at least 8 characters");
+    } else {
+      setPasswordError("");
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
@@ -52,6 +65,13 @@ function Auth({ onClose }: Props) {
       setErrorMessage(
         `Invalid email format. Please use: ${EXAMPLE_EMAIL}`
       );
+      setLoading(false);
+      return;
+    }
+
+    // Validate password for sign-up
+    if (isSignUp && (!password || password.length < 8)) {
+      setErrorMessage("Password must be at least 8 characters");
       setLoading(false);
       return;
     }
@@ -122,11 +142,9 @@ function Auth({ onClose }: Props) {
               <div className={style.passwordWrapper}>
                 <input
                   type={showPassword ? "text" : "password"}
-                  placeholder="Password"
+                  placeholder="Password (min 8 characters)"
                   value={password}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setPassword(e.target.value)
-                  }
+                  onChange={handlePasswordChange}
                 />
 
                 <button
@@ -136,6 +154,7 @@ function Auth({ onClose }: Props) {
                   {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
                 </button>
               </div>
+              {passwordError && <p className={style.error}>{passwordError}</p>}
 
               {errorMessage && <p className={style.error}>{errorMessage}</p>}
 
