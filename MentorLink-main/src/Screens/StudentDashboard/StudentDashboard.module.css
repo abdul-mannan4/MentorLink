@@ -149,14 +149,21 @@
 
   .questionsToolbar {
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .questionsToolbar h2 {
+    width: 100%;
   }
 
   .searchInput {
     width: 100%;
-    max-width: 100%;
+    max-width: 28rem;
     min-width: 0;
     flex: 1 1 auto;
+    margin: 0 auto;
     border-radius: 999px;
     border: 1px solid var(--border);
     background-color: var(--bg-page);
