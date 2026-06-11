@@ -100,6 +100,7 @@
   gap: 1.5rem;
   flex-wrap: wrap;
   margin-bottom: 1.5rem;
+  width: 100%; /* Ensure toolbar takes full width */
 }
 
 .questionsToolbar h2 {
@@ -138,6 +139,7 @@
   gap: 1.25rem;
 }
 
+/* Responsive adjustments */
 @media (max-width: 960px) {
   .overviewGrid {
     grid-template-columns: 1fr;
@@ -145,33 +147,6 @@
 
   .questionList {
     grid-template-columns: 1fr;
-  }
-
-  .questionsToolbar {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-  }
-
-  .questionsToolbar h2 {
-    width: 100%;
-  }
-
-  .searchInput {
-    width: 100%;
-    max-width: 28rem;
-    min-width: 0;
-    flex: 1 1 auto;
-    margin: 0 auto;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background-color: var(--bg-page);
-    padding: 0.95rem 1.1rem;
-    color: var(--text-body);
-    font-size: 0.95rem;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
   }
 }
 
@@ -187,11 +162,17 @@
 
   .questionsToolbar {
     flex-direction: column;
-    align-items: stretch;
+    align-items: center; /* This forces the search input to center */
+    text-align: center;
+  }
+
+  .questionsToolbar h2 {
+    width: 100%;
+    margin-bottom: 0.5rem;
   }
 
   .searchInput {
-    max-width: 100%;
+    max-width: 100%; /* Full width on mobile */
     padding: 0.6rem 0.8rem;
     font-size: 0.95rem;
   }
