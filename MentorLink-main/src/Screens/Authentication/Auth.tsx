@@ -127,7 +127,32 @@ function Auth({ onClose }: Props) {
           <div className={style.closeBtn}>
             <button onClick={onClose}>X</button>
           </div>
-          <h2>MentorLink</h2>
+
+          <div className={style.authHeader}>
+            <h2>MentorLink</h2>
+            <p className={style.authSubtitle}>
+              {isSignUp
+                ? "Create your student account to connect with mentors."
+                : "Sign in with your NTU student email to continue."}
+            </p>
+          </div>
+
+          <div className={style.modeTabs}>
+            <button
+              type="button"
+              className={`${style.modeTab} ${!isSignUp ? style.activeTab : ""}`}
+              onClick={() => setIsSignUp(false)}
+            >
+              Sign In
+            </button>
+            <button
+              type="button"
+              className={`${style.modeTab} ${isSignUp ? style.activeTab : ""}`}
+              onClick={() => setIsSignUp(true)}
+            >
+              Sign Up
+            </button>
+          </div>
 
           <form onSubmit={handleSubmit}>
             <div className={style.inputForm}>
@@ -159,17 +184,11 @@ function Auth({ onClose }: Props) {
               {errorMessage && <p className={style.error}>{errorMessage}</p>}
 
               <button
-                className={loading ? "spinner" : style.signInButton}
+                className={loading ? style.disabledButton : style.primaryButton}
                 type="submit"
                 disabled={loading}
               >
-                {loading ? (
-                  <span className="spinnner"></span>
-                ) : isSignUp ? (
-                  "Sign Up"
-                ) : (
-                  "Sign In"
-                )}
+                {loading ? "Loading..." : isSignUp ? "Create Account" : "Sign In"}
               </button>
             </div>
 
@@ -182,10 +201,10 @@ function Auth({ onClose }: Props) {
 
               <button
                 type="button"
-                className={style.signInButton}
+                className={style.secondaryButton}
                 onClick={() => setIsSignUp((p) => !p)}
               >
-                {isSignUp ? "Sign In" : "Sign Up"}
+                {isSignUp ? "Switch to Sign In" : "Switch to Sign Up"}
               </button>
             </div>
           </form>

@@ -146,18 +146,26 @@
   .questionList {
     grid-template-columns: 1fr;
   }
+
+  .questionsToolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
   .searchInput {
-  width: 100%;
-  /* max-width: 22rem; */
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background-color: var(--bg-page);
-  padding: 0.95rem 1.1rem;
-  color: var(--text-body);
-  font-size: 0.95rem;
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    flex: 1 1 auto;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background-color: var(--bg-page);
+    padding: 0.95rem 1.1rem;
+    color: var(--text-body);
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
 }
 
 @media (max-width: 520px) {
@@ -177,5 +185,7 @@
 
   .searchInput {
     max-width: 100%;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.95rem;
   }
 }

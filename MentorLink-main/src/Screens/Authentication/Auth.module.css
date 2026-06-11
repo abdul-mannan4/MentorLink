@@ -10,19 +10,33 @@
     flex-direction: column;
     justify-content: center;
     align-items: stretch;
-    color: var(--primary);
-    width: min(100%, 400px);
-    padding: 0.9rem 0.9rem;
+    color: var(--text-heading);
+    width: min(100%, 420px);
+    padding: 1.6rem 1.5rem;
     background-color: var(--bg-surface);
-    border-radius: 12px;
-    border: 1px solid rgb(96, 93, 93);
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 1.5rem;
+    border: 1px solid rgba(24, 95, 165, 0.14);
+    box-shadow: 0 22px 60px rgba(23, 78, 149, 0.12);
     box-sizing: border-box;
 }
 
-.loginCard h2{
-   padding: 0 0.2rem;
-   text-align: center;
+.authHeader {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.authHeader h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 2.3vw, 2.4rem);
+  letter-spacing: -0.03em;
+}
+
+.authSubtitle {
+  margin: 0.65rem auto 0;
+  max-width: 26rem;
+  color: var(--text-body);
+  font-size: 0.98rem;
+  line-height: 1.65;
 }
 
 .inputForm{
@@ -30,21 +44,28 @@
     flex-direction: column;
     justify-content: center;
     align-items: stretch;
-     width: 100%;
+    width: 100%;
     margin-top: 0;
 }
 .inputForm input{
-    height: 2.8rem;
+    height: 3rem;
     width: 100%;
-    max-width: 600px;
-    margin: 0.4rem 0;
-    padding: 0 0.75rem;
-    border-radius: 5px;
-    border: 1px solid black;
+    max-width: 100%;
+    margin: 0.55rem 0;
+    padding: 0 0.9rem;
+    border-radius: 1rem;
+    border: 1px solid var(--border);
+    background-color: var(--bg-page);
     outline: none;
-    font-size: 0.8rem;
+    font-size: 0.95rem;
+    color: var(--text-heading);
     box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
 
+.inputForm input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(24, 95, 165, 0.08);
 }
 /* .signInButton{
   align-self: center;
@@ -61,27 +82,91 @@
   font-weight: 600;
 } */
 
-.signInButton,.signUpBtn {
-
-  align-self: center;
- width: clamp(80px, 15vw, 140px);
-  color: var(--primary);
-    outline: none;
-  border: 0;
-  background-color: transparent;
-  cursor: pointer;
-  margin: 0.6rem 1rem;
-  font-weight: bold;
-  border-radius: 2rem;
-  width: 5rem;
-  height: 2rem;
-  transition: transform 0.3s ease;
+.modeTabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1rem 0 0.75rem;
+  background-color: var(--bg-page);
+  padding: 0.35rem;
+  border-radius: 999px;
+  border: 1px solid rgba(24, 95, 165, 0.15);
 }
-.signInButton:hover {
+
+.modeTab {
+  flex: 1;
+  min-width: 110px;
+  padding: 0.85rem 0.95rem;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-heading);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modeTab:hover {
+  background-color: rgba(24, 95, 165, 0.08);
+}
+
+.activeTab {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: var(--text-white);
+  box-shadow: 0 10px 30px rgba(24, 95, 165, 0.18);
+}
+
+.primaryButton {
+  width: 100%;
+  max-width: 100%;
+  align-self: center;
+  height: 3rem;
+  margin: 0.75rem 0;
+  border-radius: 999px;
+  outline: none;
+  border: none;
+  cursor: pointer;
   background-color: var(--primary);
   color: var(--text-white);
-  transform: scale(1.05);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  font-weight: 700;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.primaryButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background-color: var(--accent);
+}
+
+.secondaryButton {
+  min-width: 140px;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  outline: none;
+  border: 1px solid var(--border);
+  background-color: transparent;
+  color: var(--text-heading);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.secondaryButton:hover {
+  background-color: var(--bg-surface-hover);
+}
+
+.disabledButton {
+  width: 100%;
+  max-width: 100%;
+  align-self: center;
+  height: 3rem;
+  margin: 0.75rem 0;
+  border-radius: 999px;
+  outline: none;
+  border: none;
+  cursor: not-allowed;
+  background-color: var(--border);
+  color: var(--text-muted);
 }
 
 .footer{
@@ -110,8 +195,8 @@
   font-weight: 600;
 } */
 .error {
-  color: red;
-  font-size: 0.8rem;
+  color: var(--accent);
+  font-size: 0.88rem;
   margin: 0.25rem 0;
   text-align: center;
 }
@@ -153,6 +238,7 @@
    .passwordWrapper input{
     width: 100%;
     padding-right: 40px;
+    border-radius: 1rem;
    }
    
    .passwordWrapper button{
@@ -162,6 +248,7 @@
     border: none;
     cursor: pointer;
     display: flex;
+    color: var(--text-body);
    
    }
    .closeBtn{
@@ -174,19 +261,18 @@
    }
    .closeBtn button{
     font-family:Verdana, Geneva, Tahoma, sans-serif;
-    background-color: var(--highlight);
-    color: rgba(255, 255, 255, 0.74);
+    background-color: var(--primary);
+    color: var(--text-white);
     border: none;
-    height: 1.5rem;
-    font-size:x-small;
+    height: 2rem;
+    width: 2rem;
+    font-size: 0.85rem;
     text-align: center;
-    
-    width: 1.5rem;
-    border-radius: 5px;
+    border-radius: 50%;
     cursor: pointer;
-        transition: transform 0.2s ease-out;
+    transition: transform 0.2s ease-out, background-color 0.2s ease;
    }
    .closeBtn button:hover{
-    transform:scale(1.2)
-   
+    transform:scale(1.12);
+    background-color: var(--accent);
    }
