@@ -137,7 +137,7 @@ const StudentPageOne = () => {
   const [showAllNotifications, setShowAllNotifications] = useState(false);
   const [mentors, setMentors] = useState<Mentor[]>([]);
   const [mentorsLoading, setMentorsLoading] = useState(false);
-  const [showAllMentors, setShowAllMentors] = useState(false);
+  const [visibleMentorCount, setVisibleMentorCount] = useState(3);
 
   const signedProfileUrl = useSignedImage(profile?.profile_picture ?? "");
 
@@ -474,6 +474,7 @@ const StudentPageOne = () => {
     setMatchedVisibleCount(4);
     setUnmatchedQuestions(allUnmatchedQuestions.filter(filterFn));
     setUnmatchedVisibleCount(4);
+    setVisibleMentorCount(3);
   }, [searchContent, allMatchedQuestions, allUnmatchedQuestions]);
 
   const filteredMentors = (() => {
@@ -657,11 +658,11 @@ const StudentPageOne = () => {
           {mentorsLoading ? <p className={styles.loadingText}>Loading mentors...</p> : filteredMentors.length === 0 ? <p className={styles.emptyText}>No mentors match your search.</p> : (
             <>
               <div className={styles.mentorCardGrid}>
-                {(showAllMentors ? filteredMentors : filteredMentors.slice(0, 3)).map((mentor) => (
+                {filteredMentors.slice(0, visibleMentorCount).map((mentor) => (
                   <MentorCard key={mentor.mentor_id} mentorId={mentor.mentor_id} image={mentor.profile_picture || undefined} userName={mentor.name || mentor.user_name} Description={mentor.Description || "No description available."} rank={mentor.rank ?? 0} reviews={mentor.total_replies ?? 0} score={mentor.average_score ?? null} />
                 ))}
               </div>
-              {filteredMentors.length > 3 && <div className={styles.loadMoreContainer}><button className={styles.loadMoreBtn} onClick={() => setShowAllMentors(!showAllMentors)}>{showAllMentors ? "Show Less" : "See More Mentors"}</button></div>}
+              {visibleMentorCount < filteredMentors.length && <div className={styles.loadMoreContainer}><button className={styles.loadMoreBtn} onClick={() => setVisibleMentorCount((prev) => prev + 3)}>See More Mentors</button></div>}
             </>
           )}
         </div>
