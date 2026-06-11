@@ -25,6 +25,7 @@ const StudentDashboard = () => {
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
 
+  // Mode and session validation lifecycle
   useEffect(() => {
     const mode = sessionStorage.getItem("activeMode");
     if (mode === "mentor") {
@@ -37,23 +38,21 @@ const StudentDashboard = () => {
     }
   }, [navigate]);
 
+  // Handle browser popstate history guardrails
   useEffect(() => {
-    // Push dummy state to capture back button/swipes if not already present
     if (!window.history.state || !window.history.state.isDummyDashboard) {
       window.history.pushState({ isDummyDashboard: true }, "", window.location.href);
     }
 
-    const handlePopState = (event: PopStateEvent) => {
+    const handlePopState = () => {
       if (switchingRef.current) {
         navigate("/student", { replace: true });
         return;
       }
-      // Re-push dummy state to block going back
       window.history.pushState({ isDummyDashboard: true }, "", window.location.href);
     };
 
     window.addEventListener("popstate", handlePopState);
-
     return () => {
       window.removeEventListener("popstate", handlePopState);
     };
@@ -64,47 +63,58 @@ const StudentDashboard = () => {
     window.history.go(-1);
   };
 
+  // Data Sync Fetch lifecycle
   useEffect(() => {
     const loadQuestions = async () => {
-      const cached = getCache("studentDashboardQuestions");
-      if (cached) {
-        setQuestions(cached);
-        setLoading(false);
-        return;
-      }
-      setLoading(true);
-      const { data: authData } = await supabase.auth.getUser();
-      if (!authData?.user) {
-        setError("User not authenticated.");
-        setLoading(false);
-        return;
-      }
+      try {
+        setError(null); // Clear errors out before initiating lookups
+        const cached = getCache("studentDashboardQuestions");
+        if (cached) {
+          setQuestions(cached);
+          setLoading(false);
+          return;
+        }
 
-      const { data, error } = await supabase
-        .from("question")
-        .select("question_id, subject, topic, description, teacher_name, uploaded_at, file_upload")
-        .eq("student_id", authData.user.id)
-        .order("uploaded_at", { ascending: false });
+        setLoading(true);
+        const { data: authData } = await supabase.auth.getUser();
+        if (!authData?.user) {
+          setError("User not authenticated.");
+          setLoading(false);
+          return;
+        }
 
-      if (error) {
-        setError("Unable to load questions. Please refresh.");
-      } else if (data) {
-        setQuestions(data as Question[]);
-        setCache("studentDashboardQuestions", data);
+        const { data, error: supabaseError } = await supabase
+          .from("question")
+          .select("question_id, subject, topic, description, teacher_name, uploaded_at, file_upload")
+          .eq("student_id", authData.user.id)
+          .order("uploaded_at", { ascending: false });
+
+        if (supabaseError) {
+          setError("Unable to load questions. Please refresh.");
+        } else if (data) {
+          setQuestions(data as Question[]);
+          setCache("studentDashboardQuestions", data);
+        }
+      } catch (err) {
+        setError("An unexpected network error occurred.");
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     loadQuestions();
   }, []);
 
+  // Optimized Search Filters
   const filtered = questions.filter((item) => {
-    const query = search.toLowerCase();
+    const query = search.toLowerCase().trim();
+    if (!query) return true; // Show all if query is blank
+
     return (
-      item.subject.toLowerCase().includes(query) ||
-      item.topic.toLowerCase().includes(query) ||
-      item.description.toLowerCase().includes(query) ||
-      item.teacher_name.toLowerCase().includes(query)
+      (item.subject?.toLowerCase() || "").includes(query) ||
+      (item.topic?.toLowerCase() || "").includes(query) ||
+      (item.description?.toLowerCase() || "").includes(query) ||
+      (item.teacher_name?.toLowerCase() || "").includes(query)
     );
   });
 
@@ -135,12 +145,13 @@ const StudentDashboard = () => {
           />
         </div>
 
+        {/* Improved Conditional Rendering Engine */}
         {loading ? (
           <p className={styles.statusText}>Loading questions...</p>
-        ) : error ? (
+        ) : error && questions.length === 0 ? (
           <p className={styles.statusText}>{error}</p>
         ) : filtered.length === 0 ? (
-          <p className={styles.statusText}>No questions found.</p>
+          <p className={styles.statusText}>No questions found matching your search.</p>
         ) : (
           <div className={styles.questionList}>
             {filtered.map((question) => (
