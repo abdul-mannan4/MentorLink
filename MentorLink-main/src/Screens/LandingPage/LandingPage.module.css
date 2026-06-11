@@ -256,6 +256,7 @@
   justify-content: center;
   padding: 10px;
   box-sizing: border-box;
+  
 }
 .innerLine {
   width: 80%;
@@ -286,7 +287,7 @@
   color: var(--text-heading);
   font-size: 2rem;
   font-weight: 700;
-  margin: 0 0 0.5rem 0;
+  margin: 0 1 0.5rem 0;
   background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

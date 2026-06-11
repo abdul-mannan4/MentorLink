@@ -25,7 +25,7 @@ function Auth({ onClose }: Props) {
   const navigate = useNavigate();
 
   const EMAIL_PATTERN = /^[0-9]{2}ntucsfl\d{4}@student\.ntu\.edu\.pk$/;
-  const EXAMPLE_EMAIL = "23ntucsfl1003@student.ntu.edu.pk";
+  const EXAMPLE_EMAIL = "20ntucsfl1000@student.ntu.edu.pk";
 
   function isValidStudentEmail(email: string) {
     return EMAIL_PATTERN.test(email);
