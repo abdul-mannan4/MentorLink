@@ -1,1021 +1,1008 @@
 /* --- Layout root --- */
-
 .TopContainer {
-
-font-family: var(--font-main);
-
-background-color: var(--bg-page);
-
-color: var(--text-body);
-
-overflow-x: hidden;
-
-width: 100%;
-
-max-width: 100%;
-
-box-sizing: border-box;
-
-padding-top: 5rem;
-
+  font-family: var(--font-main);
+  background-color: var(--bg-page);
+  color: var(--text-body);
 }
-
-
 
 /* --- Navbar --- */
-
 .LandingNavbar {
-
-display: flex;
-
-justify-content: space-between;
-
-align-items: center;
-
-border-bottom: 1.5px solid var(--border);
-
-width: 100%;
-
-padding: 1rem 2rem;
-
-box-sizing: border-box;
-
-position: fixed;
-
-top: 0;
-
-z-index: 1000;
-
-background-color: var(--bg-page);
-
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1.5px solid var(--border);
+  width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  height: 5rem;
+  margin: 0;
+  box-sizing: border-box;
+  z-index: 1000;
+  background-color: var(--bg-page);
+  /* overflow:visible; */
 }
-
-
 
 .leftSide {
-
-display: flex;
-
-align-items: center;
-
-gap: 1.5rem;
-
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  justify-content: space-between;
 }
-
-
 
 .logo {
-
-margin-right: 2rem;
-
-display: flex;
-
-align-items: center;
-
-cursor: pointer;
-
+  margin-right: 2rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
-
-
 
 .dot {
-
-display: inline-block;
-
-width: 8px;
-
-height: 8px;
-
-border-radius: 50%;
-
-background-color: var(--accent);
-
-margin-right: 10px;
-
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  margin-right: 10px;
 }
-
-
 
 .logoName {
-
-color: var(--primary);
-
-font-weight: 400;
-
-transition: transform 0.3s ease;
-
-text-decoration: none;
-
+  color: var(--primary);
+  font-weight: 400;
+  transition: transform 0.3s ease;
+  text-decoration: none;
 }
-
-
 
 .logoName:hover {
-
-transform: scale(1.10);
-
-/* font-weight: bold; */
-
+  transform: scale(1.10);
+  /* font-weight: bold; */
 }
-
-
 
 .askQuestionButton {
-
-margin: 0 1rem;
-
-color: var(--bg-page);
-
-background-color: var(--accent);
-
-border: 0;
-
-border-radius: 1rem;
-
-padding: 0.6rem 0.7rem;
-
-cursor: pointer;
-
-font-weight: bold;
-
-transition: transform 0.3s ease;
-
+  margin: 0 1rem;
+  color: var(--bg-page);
+  background-color: var(--accent);
+  border: 0;
+  border-radius: 1rem;
+  padding: 0.6rem 0.7rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.3s ease;
 }
-
-
 
 .askQuestionButton:hover {
-
-transform: scale(1.05);
-
-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
-
-
 
 .navActions {
-
-display: flex;
-
-align-items: center;
-
+  display: flex;
+  align-items: center;
+  background-color: var(--bgsurface);
 }
-
-
 
 .searchBarContainer {
-
-border: 0.1rem solid var(--bg-page);
-
-display: flex;
-
-align-items: center;
-
-justify-content: center;
-
-background-color: var(--bg-surface);
-
-border-radius: 2rem;
-
-/* padding: 0; */
-
-height: 2.5rem;
-
-margin-right: 1rem;
-
-transition: transform 1s ease;
-
-height: auto;
-
-padding: 0.1rem;
-
+  border: 0.1rem solid var(--bg-page);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-surface);
+  border-radius: 2rem;
+  /* padding: 0; */
+  height: 2.5rem;
+  margin-right: 1rem;
+  transition: transform 1s ease;
+  height: auto;
+  padding: 0.1rem;
 }
-
-
 
 .searchBar {
-
-/* border:0rem */
-
-/* height: 2rem; */
-
-padding: 0.5rem;
-
-border-radius: 2rem;
-
-color: var(--text-body);
-
-background-color: var(--bg-surface);
-
-border: 0;
-
-margin: 0 0.1rem;
-
-margin-right: 0.5rem;
-
-
+  /* border:0rem */
+  /* height: 2rem; */
+  padding: 0.5rem;
+  border-radius: 2rem;
+  color: var(--text-body);
+  background-color: var(--bg-surface);
+  border: 0;
+  margin: 0 0.1rem;
+  margin-right: 0.5rem;
 
 }
-
-
 
 .searchBar:focus {
-
-outline: none
-
+  outline: none
 }
-
-
 
 .searchBarContainer:hover {
-
-transform: scale(1.05);
-
-border-color: var(--primary);
-
+  transform: scale(1.05);
+  border-color: var(--primary);
 }
-
-
 
 .searchBarContainer:focus {
-
-/* transform: scale(1.05); */
-
-outline: none;
-
-border-color: var(--primary);
-
-box-shadow: 2px 2px 8px rgba(59, 130, 246 0.2);
-
+  /* transform: scale(1.05); */
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 2px 2px 8px rgba(59, 130, 246 0.2);
 }
-
-
 
 .searchIcon {
-
-height: 1.5rem;
-
-width: 1rem;
-
-/* margin-right: 1rem; */
-
-padding: 0rem 0.5rem;
-
-padding-left: 0.5rem;
-
-/* margin-left: 0 1rem; */
-
+  height: 1.5rem;
+  width: 1rem;
+  /* margin-right: 1rem; */
+  padding: 0rem 0.5rem;
+  padding-left: 0.5rem;
+  /* margin-left: 0 1rem; */
 }
-
-
 
 .mentorOptionButton {
-
-margin: 0 1rem;
-
-color: var(--bg-page);
-
-background-color: var(--highlight);
-
-border: 0;
-
-border-radius: 1rem;
-
-padding: 0.6rem 0.7rem;
-
-cursor: pointer;
-
-font-weight: bold;
-
-transition: transform 0.3s ease;
-
+  margin: 0 1rem;
+  color: var(--bg-page);
+  background-color: var(--highlight);
+  border: 0;
+  border-radius: 1rem;
+  padding: 0.6rem 0.7rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.3s ease;
 }
-
-
 
 .mentorOptionButtonSide {
-
-display: block;
-
-margin: 0 1rem;
-
-color: var(--bg-page);
-
-background-color: var(--highlight);
-
-border: 0;
-
-border-radius: 1rem;
-
-padding: 0.6rem 0.7rem;
-
-cursor: pointer;
-
-font-weight: bold;
-
-transition: transform 0.3s ease;
-
+  display: block;
+  margin: 0 1rem;
+  color: var(--bg-page);
+  background-color: var(--highlight);
+  border: 0;
+  border-radius: 1rem;
+  padding: 0.6rem 0.7rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.3s ease;
 }
-
-
 
 .modeButtonSide {
-
-display: flex;
-
-align-items: center;
-
-justify-content: space-between;
-
-width: 100%;
-
-margin-top: 3rem;
-
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 3rem;
 }
-
-
 
 .mentorOptionButton:hover {
-
-transform: scale(1.05);
-
-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-
-/* color: var(--text-body); */
-
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  /* color: var(--text-body); */
 }
-
-
 
 .profilePic {
-
-height: 2.5rem;
-
-width: 2.5rem;
-
-background-color: var(--text-heading);
-
-border-radius: 50%;
-
-object-fit: cover;
-
-display: block;
-
+  height: 2.5rem;
+  width: 2.5rem;
+  background-color: var(--text-heading);
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
 }
-
-
 
 .profileSideBar {
-
-position: relative;
-
-cursor: pointer;
-
-pointer-events: all;
-
+  position: relative;
+  cursor: pointer;
+  pointer-events: all;
 }
-
-
 
 .overlay {
-
-position: fixed;
-
-inset: 0;
-
-background: rgba(0, 0, 0, 0.3);
-
-z-index: 999;
-
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 999;
 }
-
-
 
 .sideBar {
-
-position: fixed;
-
-top: 0;
-
-right: 0;
-
-height: 100vh;
-
-width: 300px;
-
-background-color: var(--bg-page);
-
-z-index: 1000;
-
-/* Higher than the navbar's 1000 */
-
-display: flex;
-
-flex-direction: column;
-
-padding: 2rem 2em;
-
-box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
-
-animation: slideIn 0.3s ease-out;
-
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 300px;
+  background-color: var(--bg-page);
+  z-index: 1000;
+  /* Higher than the navbar's 1000 */
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 2em;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.3s ease-out;
 }
-
-
 
 .sideBarContent {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1rem;
 
-width: 100%;
-
-display: flex;
-
-flex-direction: column;
-
-padding: 2rem 1rem;
-
-
-
-animation: slideDown 0.6s ease-out;
-
+  animation: slideDown 0.6s ease-out;
 }
-
-
 
 .sideBarHeader {
-
-width: 100%;
-
-display: flex;
-
-flex-direction: column;
-
-justify-content: center;
-
-/* Keeps the profile pic on the right side of the sidebar */
-
-margin-bottom: 2rem;
-
-align-items: center;
-
-/* height: 13rem; */
-
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* Keeps the profile pic on the right side of the sidebar */
+  margin-bottom: 2rem;
+  align-items: center;
+  /* height: 13rem; */
 }
-
-
 
 /* Style for the profile pic when inside the sidebar */
-
 .profilePicInSidebar {
-
-height: 5rem;
-
-width: 5rem;
-
-border-radius: 50%;
-
-cursor: pointer;
-
-border: 2px solid var(--primary);
-
-transition: transform 0.2s;
-
-object-fit: cover;
-
+  height: 5rem;
+  width: 5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid var(--primary);
+  transition: transform 0.2s;
+  object-fit: cover;
 }
-
-
 
 .profilePicInSidebar:hover {
-
-transform: scale(1.1);
-
+  transform: scale(1.1);
 }
-
-
 
 .imageOverlay {
-
-position: fixed;
-
-inset: 0;
-
-display: flex;
-
-justify-content: center;
-
-align-items: center;
-
-z-index: 2000;
-
-/* backdrop-filter: blur(10px); /* 🔥 main blur */
-
-/* -webkit-backdrop-filter: blur(10px); for Safari */
-
-background-color: var(--bg-page);
-
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  /* backdrop-filter: blur(10px);   /* 🔥 main blur */
+  /* -webkit-backdrop-filter: blur(10px); for Safari */
+  background-color: var(--bg-page);
 }
-
-
 
 .previewImage {
-
-object-fit: cover;
-
-height: 10rem;
-
-width: 10rem;
-
-border-radius: 50%;
-
-border: 2px solid var(--primary);
-
-cursor: zoom-out;
-
-transform: scale(0.8);
-
-min-height: 3rem;
-
-min-width: 3rem;
-
-animation: zoomIn 0.3s ease forwards;
-
+  object-fit: cover;
+  height: 10rem;
+  width: 10rem;
+  border-radius: 50%;
+  border: 2px solid var(--primary);
+  cursor: zoom-out;
+  transform: scale(0.8);
+  min-height: 3rem;
+  min-width: 3rem;
+  animation: zoomIn 0.3s ease forwards;
 }
-
-
 
 /* Animation for Preview Image */
-
 @keyframes zoomIn {
-
-to {
-
-transform: scale(1);
-
+  to {
+    transform: scale(1);
+  }
 }
-
-}
-
-
 
 @keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
 
-from {
-
-transform: translateX(100%);
-
+  to {
+    transform: translateX(0);
+  }
 }
-
-
-
-to {
-
-transform: translateX(0);
-
-}
-
-}
-
-
 
 @keyframes slideDown {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
 
-from {
-
-transform: translateY(-50px);
-
-opacity: 0;
-
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
-
-
-
-to {
-
-transform: translateY(0);
-
-opacity: 1;
-
-}
-
-}
-
-
 
 @media (max-width: 768px) {
 
+  /* 1. Shrink Logo Name */
+  .logo-text-rest {
+    display: none;
+    /* Only 'M' will remain visible */
+  }
+
+  /* 3. Shrink Auth Buttons */
+  .buttonSignIn,
+  .buttonSignUp {
+    width: 4.2rem;
+    /* Reduced from 5rem */
+    height: 1.8rem;
+    /* Reduced from 2rem */
+    font-size: 0.75rem;
+    /* Smaller text for smaller buttons */
+    margin: 0 0.4rem;
+    /* Tighten spacing */
+  }
+
+  .LandingNavbar {
+    padding: 0.8rem 1rem;
+    /* Less padding on the sides of the bar */
+  }
+
+  .heroButton {
+    flex-direction: column;
+    height: auto;
+    gap: 15px;
+    margin-top: 1rem;
+  }
+
+  .statsContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .firstLineHero {
+    font-size: 1.6rem;
+  }
+
+  .secondLineHero {
+    font-size: 1.8rem;
+  }
+
+  .footerButton {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+  }
+
+  /* .searchBarClosed{
+    display: none;
+    margin-right: 1rem;
+  } */
 
 
-/* 1. Shrink Logo Name */
+  .mentorOptionButton {
+    display: none;
 
-.logo-text-rest {
+  }
 
-display: none;
+  .sideBar {
+    width: 40vw;
+    /* Takes up more space on mobile */
+  }
 
-/* Only 'M' will remain visible */
+  .mentorOptionButtonSide {
+    display: block;
+    margin: 0 1rem;
+    color: var(--bg-page);
+    background-color: var(--highlight);
+    border: 0;
+    border-radius: 1rem;
+    padding: 0.6rem 0.7rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+  }
 
-}
+  .modeButton {
+    display: none;
+  }
 
-
-
-/* 3. Shrink Auth Buttons */
-
-.buttonSignIn,
-
-.buttonSignUp {
-
-width: 4.2rem;
-
-/* Reduced from 5rem */
-
-height: 1.8rem;
-
-/* Reduced from 2rem */
-
-font-size: 0.75rem;
-
-/* Smaller text for smaller buttons */
-
-margin: 0 0.4rem;
-
-/* Tighten spacing */
-
-}
-
-
-
-.LandingNavbar {
-
-padding: 0.8rem 0.5rem;
-
-/* Less padding on the sides of the bar */
-
-}
-
-
-
-.heroButton {
-
-flex-direction: column;
-
-height: auto;
-
-gap: 15px;
-
-margin-top: 1rem;
-
-}
-
-
-
-.statsContainer {
-
-display: grid;
-
-grid-template-columns: 1fr 1fr;
-
-gap: 20px;
-
-}
-
-
-
-.firstLineHero {
-
-font-size: 1.6rem;
-
-}
-
-
-
-.secondLineHero {
-
-font-size: 1.8rem;
-
-}
-
-
-
-.footerButton {
-
-font-size: 0.75rem;
-
-padding: 0.2rem 0.5rem;
+  .modeButtonSide {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    /* margin: 1rem; */
+    /* padding-top: 5rem; */
+  }
 
 }
-
-
-
-/* .searchBarClosed{
-
-display: none;
-
-margin-right: 1rem;
-
-} */
-
-
-
-
-
-.mentorOptionButton {
-
-display: none;
-
-
-
-}
-
-
-
-.sideBar {
-
-width: 40vw;
-
-/* Takes up more space on mobile */
-
-}
-
-
-
-.mentorOptionButtonSide {
-
-display: block;
-
-margin: 0 1rem;
-
-color: var(--bg-page);
-
-background-color: var(--highlight);
-
-border: 0;
-
-border-radius: 1rem;
-
-padding: 0.6rem 0.7rem;
-
-cursor: pointer;
-
-font-weight: bold;
-
-transition: transform 0.3s ease;
-
-}
-
-
-
-.modeButton {
-
-display: none;
-
-}
-
-
-
-.modeButtonSide {
-
-display: flex;
-
-align-items: center;
-
-justify-content: space-between;
-
-width: 100%;
-
-/* margin: 1rem; */
-
-/* padding-top: 5rem; */
-
-}
-
-
-
-}
-
-
 
 @media (max-width: 480px) {
 
+  /* 4. Extra small screens (Mobile) */
+  .buttonSignIn,
+  .buttonSignUp {
+    width: 3.8rem;
+    font-size: 0.7rem;
+    margin: 0 0.2rem;
+  }
 
+  .navActions {
+    gap: 4px;
+    /* Pack them tighter */
+  }
 
-/* 4. Extra small screens (Mobile) */
+  .statsContainer {
+    grid-template-columns: 1fr;
+  }
 
-.buttonSignIn,
+  .footerButton {
+    font-size: 0.65rem;
+    padding: 0.15rem 0.3rem;
+  }
 
-.buttonSignUp {
-
-width: 3.8rem;
-
-font-size: 0.7rem;
-
-margin: 0 0.2rem;
-
+  .searchBarClosed {
+    display: none;
+    margin-right: 1rem;
+  }
 }
-
-.LandingNavbar {
-
-padding: 0.8rem 0.5rem;
-
-/* Less padding on the sides of the bar */
-
-}
-
-.navActions {
-
-gap: 4px;
-
-/* Pack them tighter */
-
-}
-
-
-
-.statsContainer {
-
-grid-template-columns: 1fr;
-
-}
-
-
-
-.footerButton {
-
-font-size: 0.65rem;
-
-padding: 0.15rem 0.3rem;
-
-}
-
-
-
-.searchBarClosed {
-
-display: none;
-
-margin-right: 1rem;
-
-}
-
-}
-
-
-
 
 
 /*Body Styling*/
-
 .mentorCard {
-
-display: flex;
-
-gap: 1.5rem;
-
-flex-wrap: wrap;
-
-padding: 1rem 0;
-
-justify-content: center;
-
-align-items: stretch;
-
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding: 1rem 0;
+  justify-content: center;
+  align-items: stretch;
 }
-
-
 
 .mentorCardGrid {
-
-display: grid;
-
-grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-
-gap: 1.5rem;
-
-padding-top: 0.5rem;
-
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding-top: 0.5rem;
 }
-
-
 
 @media (max-width: 480px) {
-
-.mentorCardGrid {
-
-grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-
-justify-content: center;
-
-justify-items: center;
-
+  .mentorCardGrid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    justify-content: center;
+    justify-items: center;
+  }
 }
-
-}
-
-
 
 .profileEditButton {
-
-background: transparent;
-
-border: 0;
-
-color: var(--primary);
-
-font-size: medium;
-
-font-weight: bold;
-
-transition: transform 0.3s;
-
+  background: transparent;
+  border: 0;
+  color: var(--primary);
+  font-size: medium;
+  font-weight: bold;
+  transition: transform 0.3s;
 }
-
-
 
 .profileEditButton:hover {
-
-transform: scale(1.05);
-
+  transform: scale(1.05);
 }
-
-
 
 .questionsSection {
-
-padding: 1rem 1rem;
-
-/* margin: 0 1rem; */
-
+  padding: 1rem 1rem;
+  /* margin: 0 1rem; */
 }
-
-
 
 .questionBlockTitle {
-
-display: flex;
-
-justify-content: center;
-
-margin-bottom: 1.5rem;
-
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
 }
-
-
 
 .sectionTitle {
-
-text-align: center;
-
-background: linear-gradient(135deg, var(--primary), var(--accent));
-
-padding: 1rem 2rem;
-
-border-radius: 1.5rem;
-
-color: var(--text-white);
-
-box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-
-font-weight: 700;
-
-letter-spacing: 0.5px;
-
+  text-align: center;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  padding: 1rem 2rem;
+  border-radius: 1.5rem;
+  color: var(--text-white);
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
-
-
 
 .loadMoreContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  width: 100%;
+}
 
-display: flex;
+.loadMoreBtn {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0.5rem 1rem;
+  transition: color 0.2s ease;
+}
 
-justify-content: center;
+.loadMoreBtn:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
 
-margin-top: 2rem;
+/* --- Notifications --- */
+.notificationWrapper {
+  position: relative;
+  margin: 0 1rem;
+}
 
-margin-bottom: 2rem;
+.bellIconContainer {
+  position: relative;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-width: 100%;
+.bellIconContainer:hover {
+  background-color: var(--bg-surface-hover);
+}
 
+.bellIcon {
+  color: var(--text-heading);
+  width: 24px;
+  height: 24px;
+}
+
+.notificationBadge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 10px;
+  height: 10px;
+  background-color: var(--accent);
+  border-radius: 50%;
+  border: 2px solid var(--bgsurface);
+}
+
+.notificationDropdown {
+  position: absolute;
+  top: 100%;
+  right: -50px;
+  width: 320px;
+  background-color: var(--bgsurface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+  margin-top: 0.5rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Backdrop placed when notifications dropdown is open. Clicking it closes the dropdown. */
+.notificationBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.18);
+  z-index: 950;
+}
+
+.notificationHeader {
+  padding: 1rem;
+  margin: 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-heading);
+  font-weight: 600;
+  background-color: var(--bg-page);
+}
+
+.noNotifications {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.notificationList {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.notificationItem {
+  display: flex;
+  align-items: flex-start;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background-color 0.2s;
+  background-color: var(--bg-page);
+}
+.notificationItem:hover {
+  background-color: var(--bg-surface);
 }
 
 
 
-.loadMoreBtn {
+.notifDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--border);
+  margin-top: 6px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
 
-background: none;
+.unread .notifDot {
+  background-color: var(--accent);
+}
 
-border: none;
+.notifContent {
+  flex: 1;
+}
 
-color: var(--primary);
+.notifContent p {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+  color: var(--text-body);
+  line-height: 1.3;
+}
 
-font-size: 1.05rem;
+.notifContent strong {
+  color: var(--text-heading);
+}
 
-font-weight: 600;
+.notifContent span {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
 
-cursor: pointer;
+.viewMoreBtn {
+  width: 100%;
+  padding: 0.75rem;
+  background: none;
+  border: none;
+  border-top: 1px solid var(--border);
+  color: var(--primary);
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s;
+}
 
-text-decoration: underline;
+.viewMoreBtn:hover {
+  background-color: var(--bg-surface);
+}
+.menuItems {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+}
 
-padding: 0.5rem 1rem;
+/* --- Mobile Search Trigger (Hidden on Desktop) --- */
+.mobileSearchTrigger {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-heading);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s;
+  align-items: center;
+  justify-content: center;
+}
 
-transition: color 0.2s ease;
+.mobileSearchTrigger:hover {
+  background-color: var(--slate-100);
+  color: var(--primary);
+}
 
+/* --- Mobile Search Overlay & Layout Redesign --- */
+@media (max-width: 768px) {
+  .searchBarContainer {
+    display: none !important;
+  }
+
+  .mobileSearchTrigger {
+    display: flex;
+    margin-right: 0.5rem;
+  }
+
+  .askQuestionButton {
+    display: inline-block !important;
+    margin: 0 0.25rem 0 0.5rem;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.75rem;
+    border-radius: 1rem;
+    white-space: nowrap;
+  }
+}
+
+.mobileSearchOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--bg-page);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.mobileSearchHeader {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1.5px solid var(--border);
+  background-color: var(--bg-surface);
+  gap: 0.75rem;
+}
+
+.mobileSearchCloseBtn {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  color: var(--text-heading);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.mobileSearchCloseBtn:hover {
+  background-color: var(--slate-100);
+}
+
+.mobileSearchInputWrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.mobileSearchInput {
+  width: 100%;
+  padding: 0.6rem 2.5rem 0.6rem 1rem;
+  border-radius: 2rem;
+  border: 1.5px solid var(--border);
+  background-color: var(--bg-page);
+  color: var(--text-body);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.mobileSearchInput:focus {
+  border-color: var(--primary);
+  background-color: var(--bg-surface);
+}
+
+.mobileSearchClearBtn {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  padding: 0.25rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.mobileSearchClearBtn:hover {
+  background-color: var(--slate-100);
+}
+
+.mobileSearchResults {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem 0;
+  background-color: var(--bg-page);
+}
+
+/* Suggestions List */
+.mobileSuggestionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.suggestionSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.suggestionSectionHeader {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.suggestionCardsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.mobileSuggestionCard {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.mobileSuggestionCard:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+  background-color: var(--slate-100);
+}
+
+.suggestionCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.suggestionBadge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background-color: rgba(24, 95, 165, 0.1);
+  color: var(--primary);
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.mentorBadge {
+  background-color: rgba(127, 119, 221, 0.1);
+  color: var(--accent);
+}
+
+.suggestionSubject {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.suggestionRank {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--highlight);
+}
+
+.suggestionTopic {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.suggestionDesc {
+  font-size: 0.85rem;
+  color: var(--text-body);
+  margin: 0;
+  display: -webkit-box;
+  /* -webkit-line-clamp: 2; */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.suggestionMeta {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+  align-items: center;
+}
+
+.mentorRowBody {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.mentorSuggestionAvatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--primary);
+  flex-shrink: 0;
+}
+
+.mentorRowInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+}
+
+.mobileNoResults {
+  padding: 2.5rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+}
+
+/* Empty Search Placeholder Screen */
+.mobileSearchPlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.searchPromptIcon {
+  color: var(--primary);
+  opacity: 0.6;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+.searchPromptText {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.popularTags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.popularTag {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.9rem;
+  border-radius: 1.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-body);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.popularTag:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background-color: var(--slate-100);
+  transform: translateY(-1px);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 0.6; }
 }
