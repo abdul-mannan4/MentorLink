@@ -9,23 +9,23 @@ import { Eye, EyeOff } from "lucide-react";
 
 
 
-type Props={
-  onClose:()=>void
+type Props = {
+  onClose: () => void
 }
 
 
-function Auth({onClose}:Props) {
+function Auth({ onClose }: Props) {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
- 
+
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const EMAIL_PATTERN = /^[0-9]{2}ntucsfl\d{4}@student\.ntu\.edu\.pk$/;
   const EXAMPLE_EMAIL = "23ntucsfl1003@student.ntu.edu.pk";
@@ -37,7 +37,7 @@ function Auth({onClose}:Props) {
   function handleEmailChange(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
     setEmail(value);
-    
+
     // Real-time validation feedback
     if (value && !isValidStudentEmail(value)) {
       setEmailError(`Email should match pattern: ${EXAMPLE_EMAIL}`);
@@ -49,7 +49,7 @@ function Auth({onClose}:Props) {
   function handlePasswordChange(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
     setPassword(value);
-    
+
     // Real-time validation feedback for sign-up only
     if (isSignUp && value && value.length < 8) {
       setPasswordError("Password must be at least 8 characters");
@@ -80,13 +80,13 @@ function Auth({onClose}:Props) {
     }
 
     if (isSignUp) {
-      const { data,error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          
+
           emailRedirectTo: `${window.location.origin}/email-verified`,
-  },
+        },
       });
 
       if (error) {
@@ -95,15 +95,14 @@ function Auth({onClose}:Props) {
         return;
       }
 
-      if(data?.user?.identities?.length===0)
-      {
+      if (data?.user?.identities?.length === 0) {
         setErrorMessage("Email already registered.Please sign in.");
         setLoading(false);
         return;
       }
 
-      navigate("/email-sent",{
-        state:{email}
+      navigate("/email-sent", {
+        state: { email }
       })
 
 
@@ -122,88 +121,88 @@ function Auth({onClose}:Props) {
         setLoading(false);
         return;
       }
-        navigate("/dashboard")
-        setLoading(false);
-    
-  }
+      navigate("/dashboard")
+      setLoading(false);
+
+    }
   }
   return (
     <>
- 
 
-        <div className={style.loginContainer}>
 
-          <div className={`${style.loginCard}`}>
-            <div className={style.closeBtn}>
+      <div className={style.loginContainer}>
+
+        <div className={`${style.loginCard}`}>
+          <div className={style.closeBtn}>
             <button onClick={onClose}>X</button>
           </div>
-            <h2>MentorLink</h2>
+          <h2>MentorLink</h2>
 
-            <form onSubmit={handleSubmit}>
-              <div className={style.inputForm}>
+          <form onSubmit={handleSubmit}>
+            <div className={style.inputForm}>
+              <input
+                type="email"
+                name="email"
+                autoComplete="email"
+                placeholder={`e.g. ${EXAMPLE_EMAIL}`}
+                value={email}
+                onChange={handleEmailChange}
+              />
+              {emailError && <p className={style.error}>{emailError}</p>}
+
+              <div className={style.passwordWrapper}>
                 <input
-                  type="email"
-                  name="email"
-                  autoComplete="email"
-                  placeholder={`e.g. ${EXAMPLE_EMAIL}`}
-                  value={email}
-                  onChange={handleEmailChange}
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  autoComplete={isSignUp ? "new-password" : "current-password"}
+                  placeholder="Password (min 8 characters)"
+                  value={password}
+                  onChange={handlePasswordChange}
                 />
-                {emailError && <p className={style.error}>{emailError}</p>}
-
-                <div className={style.passwordWrapper}>
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    autoComplete={isSignUp ? "new-password" : "current-password"}
-                    placeholder="Password (min 8 characters)"
-                    value={password}
-                    onChange={handlePasswordChange}
-                  />
-
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((p) => !p)}
-                  >
-                    {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
-                  </button>
-                </div>
-                {passwordError && <p className={style.error}>{passwordError}</p>}
-
-                {errorMessage && (
-                  <p className={style.error}>{errorMessage}</p>
-                )}
 
                 <button
-                  className={loading  ? "spinner" : style.signInButton}
-                  type="submit"
-                  disabled={loading}
+                  type="button"
+                  onClick={() => setShowPassword((p) => !p)}
                 >
-                  {loading ? (
-                    <span className="spinnner"></span>
-                  ) : isSignUp ? (
-                    "Sign Up"
-                  ) : (
-                    "Sign In"
-                  )}
+                  {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
                 </button>
               </div>
+              {passwordError && <p className={style.error}>{passwordError}</p>}
 
-              <div className={style.footer}>
-                <small>
-                  {isSignUp
-                    ? "Already have an account?"
-                    : "Don't have an account?"}
-                </small>
+              {errorMessage && (
+                <p className={style.error}>{errorMessage}</p>
+              )}
 
-                <button type="button" className={style.signInButton} onClick={() => setIsSignUp((p) => !p)}>
-                  {isSignUp ? "Sign In" : "Sign Up"}
-                </button>
-              </div>
-            </form>
-          </div>
+              <button
+                className={loading ? "spinner" : style.signInButton}
+                type="submit"
+                disabled={loading}
+              >
+                {loading ? (
+                  <span className="spinnner"></span>
+                ) : isSignUp ? (
+                  "Sign Up"
+                ) : (
+                  "Sign In"
+                )}
+              </button>
+            </div>
+
+            <div className={style.footer}>
+              <small>
+                {isSignUp
+                  ? "Already have an account?"
+                  : "Don't have an account?"}
+              </small>
+
+              <button type="button" className={style.signInButton} onClick={() => setIsSignUp((p) => !p)}>
+                {isSignUp ? "Sign In" : "Sign Up"}
+              </button>
+            </div>
+          </form>
         </div>
-    
+      </div>
+
     </>
   );
 }
