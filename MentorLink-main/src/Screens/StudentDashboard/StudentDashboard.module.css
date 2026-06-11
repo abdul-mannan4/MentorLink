@@ -63,28 +63,6 @@
   margin-bottom: 2rem;
 }
 
-.overviewCard {
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: 1.5rem;
-  padding: 1.5rem;
-  box-shadow: var(--shadow-sm);
-}
-
-.overviewLabel {
-  display: block;
-  color: var(--text-muted);
-  margin-bottom: 0.75rem;
-  font-size: 0.95rem;
-}
-
-.overviewValue {
-  display: block;
-  font-size: 2rem;
-  color: var(--text-heading);
-  font-weight: 800;
-}
-
 .questionsSection {
   background: var(--bg-surface);
   border: 1px solid var(--border);
@@ -93,14 +71,14 @@
   box-shadow: var(--shadow-md);
 }
 
+/* --- FIXED TOOLBAR STYLES --- */
 .questionsToolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1.5rem;
-  flex-wrap: wrap;
   margin-bottom: 1.5rem;
-  width: 100%; /* Ensure toolbar takes full width */
+  width: 100%;
 }
 
 .questionsToolbar h2 {
@@ -120,7 +98,9 @@
   font-size: 0.95rem;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box; /* Ensures padding doesn't affect width */
 }
+/* ---------------------------- */
 
 .searchInput:focus {
   border-color: var(--primary);
@@ -141,39 +121,25 @@
 
 /* Responsive adjustments */
 @media (max-width: 960px) {
-  .overviewGrid {
-    grid-template-columns: 1fr;
-  }
+  .overviewGrid { grid-template-columns: 1fr; }
+  .questionList { grid-template-columns: 1fr; }
+}
 
-  .questionList {
-    grid-template-columns: 1fr;
+@media (max-width: 768px) {
+  .questionsToolbar {
+    flex-direction: column;
+    align-items: center; /* Centers items horizontally */
+    text-align: center;
+  }
+  
+  .searchInput {
+    max-width: 100%; /* Spans full width when centered */
   }
 }
 
 @media (max-width: 520px) {
-  .dashboardRoot {
-    padding: 1.5rem 1rem 3rem;
-  }
-
-  .dashboardHeader {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .questionsToolbar {
-    flex-direction: column;
-    align-items: center; /* This forces the search input to center */
-    text-align: center;
-  }
-
-  .questionsToolbar h2 {
-    width: 100%;
-    margin-bottom: 0.5rem;
-  }
-
-  .searchInput {
-    max-width: 100%; /* Full width on mobile */
-    padding: 0.6rem 0.8rem;
-    font-size: 0.95rem;
-  }
+  .dashboardRoot { padding: 1.5rem 1rem 3rem; }
+  .dashboardHeader { flex-direction: column; align-items: stretch; }
+  .questionsToolbar { flex-direction: column; align-items: center; }
+  .searchInput { max-width: 100%; padding: 0.6rem 0.8rem; }
 }
