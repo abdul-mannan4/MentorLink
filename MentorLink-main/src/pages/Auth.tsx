@@ -90,17 +90,24 @@ function Auth({ onClose }: Props) {
       });
 
       if (error) {
-        setErrorMessage(error.message);
-        setLoading(false);
-        if (error.message.toLowerCase().includes("already registered") || error.message.toLowerCase().includes("already exist")) {
-          setIsSignUp(false); // Automatically switch to Sign In mode
+        if (
+          error.message.toLowerCase().includes("already registered") || 
+          error.message.toLowerCase().includes("already exist") ||
+          error.message.toLowerCase().includes("user already exists")
+        ) {
+          setErrorMessage("Account already exists. Please sign in.");
+          setIsSignUp(false); // Switch to Sign In mode
+        } else {
+          setErrorMessage(error.message);
         }
+        setLoading(false);
         return;
       }
 
+      // Supabase sometimes returns a fake user with empty identities for existing accounts
       if (data?.user && (!data.user.identities || data.user.identities.length === 0)) {
-        setErrorMessage("Email already registered. Please sign in.");
-        setIsSignUp(false); // Automatically switch to Sign In mode
+        setErrorMessage("Account already exists. Please sign in.");
+        setIsSignUp(false); // Switch to Sign In mode
         setLoading(false);
         return;
       }
