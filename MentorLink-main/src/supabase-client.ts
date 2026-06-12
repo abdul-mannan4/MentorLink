@@ -1,7 +1,25 @@
-// Custom client that redirects all queries to Express server
+import { createClient } from "@supabase/supabase-js";
 import { clearCache } from "./utils/cache";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "https://isxxzkcanajavlrietue.supabase.co";
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
+
+const supabaseAuthClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Sync standard auth session to the custom local storage key so the DB proxy works
+supabaseAuthClient.auth.onAuthStateChange((event, session) => {
+  if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
+    clearCache();
+  }
+  if (session) {
+    localStorage.setItem("sb-session", JSON.stringify(session));
+    localStorage.setItem("sb-user", JSON.stringify(session.user));
+  } else if (event === "SIGNED_OUT") {
+    localStorage.removeItem("sb-session");
+    localStorage.removeItem("sb-user");
+  }
+});
 
 function getLocalAccessToken(): string {
   const sessionStr = localStorage.getItem("sb-session");
@@ -12,19 +30,6 @@ function getLocalAccessToken(): string {
   } catch (e) {
     return "";
   }
-}
-
-// Custom listeners for auth state changes
-const authListeners = new Set<(event: string, session: any) => void>();
-
-function triggerAuthChange(event: string, session: any) {
-  authListeners.forEach((cb) => {
-    try {
-      cb(event, session);
-    } catch (e) {
-      console.error("Auth listener callback error:", e);
-    }
-  });
 }
 
 class MockBuilder {
@@ -154,210 +159,7 @@ class MockBuilder {
 }
 
 export const supabase = {
-  auth: {
-    async signUp(params: any) {
-      try {
-        const res = await fetch(`${API_URL}/auth/signup`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            email: params.email,
-            password: params.password,
-            redirectTo: params.options?.emailRedirectTo
-          })
-        });
-
-        const json = await res.json();
-        if (!res.ok) {
-          return { data: null, error: { message: json.error || "Signup failed" } };
-        }
-
-        return { data: json.data, error: null };
-      } catch (err: any) {
-        return { data: null, error: { message: err.message || "Signup network error" } };
-      }
-    },
-
-    async signInWithPassword(params: any) {
-      try {
-        const res = await fetch(`${API_URL}/auth/signin`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            email: params.email,
-            password: params.password
-          })
-        });
-
-        const json = await res.json();
-        if (!res.ok) {
-          return { data: null, error: { message: json.error || "Signin failed" } };
-        }
-
-        if (json.data?.session) {
-          clearCache();
-          localStorage.setItem("sb-session", JSON.stringify(json.data.session));
-          localStorage.setItem("sb-user", JSON.stringify(json.data.user));
-          triggerAuthChange("SIGNED_IN", json.data.session);
-        }
-
-        return { data: json.data, error: null };
-      } catch (err: any) {
-        return { data: null, error: { message: err.message || "Signin network error" } };
-      }
-    },
-
-    async signOut() {
-      const token = getLocalAccessToken();
-      try {
-        await fetch(`${API_URL}/auth/signout`, {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${token}`
-          }
-        });
-      } catch (e) {
-        console.error("Signout API error:", e);
-      }
-      localStorage.removeItem("sb-session");
-      localStorage.removeItem("sb-user");
-      triggerAuthChange("SIGNED_OUT", null);
-      clearCache();
-      return { error: null };
-    },
-
-    async getUser() {
-      // Return cached user or fetch from backend
-      const userStr = localStorage.getItem("sb-user");
-      if (userStr) {
-        try {
-          return { data: { user: JSON.parse(userStr) }, error: null };
-        } catch (e) {
-          // ignore
-        }
-      }
-
-      const token = getLocalAccessToken();
-      if (!token) {
-        return { data: { user: null }, error: { message: "No active session" } };
-      }
-
-      try {
-        const res = await fetch(`${API_URL}/auth/me`, {
-          method: "GET",
-          headers: {
-            "Authorization": `Bearer ${token}`
-          }
-        });
-        const json = await res.json();
-        if (!res.ok) {
-          return { data: { user: null }, error: { message: json.error || "Failed to fetch user" } };
-        }
-        localStorage.setItem("sb-user", JSON.stringify(json.user));
-        return { data: { user: json.user }, error: null };
-      } catch (err: any) {
-        return { data: { user: null }, error: { message: err.message || "Network error" } };
-      }
-    },
-
-    async getSession() {
-      const sessionStr = localStorage.getItem("sb-session");
-      if (!sessionStr) {
-        return { data: { session: null }, error: null };
-      }
-      try {
-        const session = JSON.parse(sessionStr);
-        return { data: { session }, error: null };
-      } catch (e) {
-        return { data: { session: null }, error: null };
-      }
-    },
-
-    async verifyOtp(params: any) {
-      try {
-        const res = await fetch(`${API_URL}/auth/verify-otp`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            token_hash: params.token_hash,
-            type: params.type
-          })
-        });
-
-        const json = await res.json();
-        if (!res.ok) {
-          return { data: { session: null, user: null }, error: { message: json.error || "Verification failed" } };
-        }
-
-        if (json.data?.session) {
-          clearCache();
-          localStorage.setItem("sb-session", JSON.stringify(json.data.session));
-          localStorage.setItem("sb-user", JSON.stringify(json.data.user));
-          triggerAuthChange("SIGNED_IN", json.data.session);
-        }
-
-        return { data: json.data, error: null };
-      } catch (err: any) {
-        return { data: { session: null, user: null }, error: { message: err.message || "Network error" } };
-      }
-    },
-
-    async resend(params: any) {
-      try {
-        const res = await fetch(`${API_URL}/auth/resend`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            type: params.type,
-            email: params.email
-          })
-        });
-
-        const json = await res.json();
-        if (!res.ok) {
-          return { data: null, error: { message: json.error || "Resend failed" } };
-        }
-
-        return { data: json.data, error: null };
-      } catch (err: any) {
-        return { data: null, error: { message: err.message || "Network error" } };
-      }
-    },
-
-    onAuthStateChange(callback: (event: string, session: any) => void) {
-      authListeners.add(callback);
-      
-      const sessionStr = localStorage.getItem("sb-session");
-      if (sessionStr) {
-        try {
-          const session = JSON.parse(sessionStr);
-          callback("SIGNED_IN", session);
-        } catch (e) {
-          callback("SIGNED_OUT", null);
-        }
-      } else {
-        callback("SIGNED_OUT", null);
-      }
-
-      return {
-        data: {
-          subscription: {
-            unsubscribe() {
-              authListeners.delete(callback);
-            }
-          }
-        }
-      };
-    }
-  },
+  auth: supabaseAuthClient.auth,
 
   from(table: string) {
     return new MockBuilder(table);
