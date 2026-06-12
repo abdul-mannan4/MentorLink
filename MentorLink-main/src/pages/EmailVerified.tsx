@@ -32,7 +32,6 @@ function ConfirmEmail() {
           setSessionReady(true);
         }
       });
-    }
     } else {
       // No token_hash. Let's check if they are already signed in.
       supabase.auth.getSession().then(({ data: { session } }) => {
