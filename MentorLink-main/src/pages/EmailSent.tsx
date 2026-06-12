@@ -51,7 +51,7 @@ useEffect(() => {
         <h2 className={style.brand}>MentorLink</h2>
         <h3>Verify your email address</h3>
         <p className={style.message}>
-          We've sent a verification link to your Outlook Email. Please check your inbox
+          We've sent a verification link to your student email. Please check your inbox
           and click the link to activate your account.
         </p>
         <div className={style.emailBox}>📩 {email}</div>

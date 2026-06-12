@@ -92,11 +92,15 @@ function Auth({ onClose }: Props) {
       if (error) {
         setErrorMessage(error.message);
         setLoading(false);
+        if (error.message.toLowerCase().includes("already registered") || error.message.toLowerCase().includes("already exist")) {
+          setIsSignUp(false); // Automatically switch to Sign In mode
+        }
         return;
       }
 
-      if (data?.user?.identities?.length === 0) {
-        setErrorMessage("Email already registered.Please sign in.");
+      if (data?.user && (!data.user.identities || data.user.identities.length === 0)) {
+        setErrorMessage("Email already registered. Please sign in.");
+        setIsSignUp(false); // Automatically switch to Sign In mode
         setLoading(false);
         return;
       }
