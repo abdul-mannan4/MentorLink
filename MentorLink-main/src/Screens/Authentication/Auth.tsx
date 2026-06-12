@@ -1,7 +1,8 @@
 // Auth.tsx — Redesigned from scratch
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../supabase-client";
+import { createClient } from "@supabase/supabase-js";
+import { supabase as proxySupabase } from "../../supabase-client";
 import type { ChangeEvent } from "react";
 import style from "./Auth.module.css";
 import { Eye, EyeOff } from "lucide-react";
@@ -62,9 +63,15 @@ function Auth({ onClose }: Props) {
     setErrorMessage("");
   }
 
+  // Initialize a direct, native Supabase client for Authentication
+  // This bypasses the Railway proxy entirely, preventing all the 400 errors and false positives
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+  const nativeSupabase = createClient(supabaseUrl, supabaseKey);
+
   async function handleSignUp() {
-    // Call backend signup — backend already checks for duplicate emails
-    const { data, error } = await supabase.auth.signUp({
+    // 1. Direct call to Supabase to create the account
+    const { data, error } = await nativeSupabase.auth.signUp({
       email,
       password,
       options: {
@@ -72,46 +79,44 @@ function Auth({ onClose }: Props) {
       },
     });
 
+    // 2. Handle actual errors (like SMTP failures)
     if (error) {
-      // Backend returns "Email already registered. Please sign in." for confirmed duplicates
-      // Backend returns "Unable to send verification email..." for unconfirmed duplicates OR SMTP issues
       const msg = error.message.toLowerCase();
-      const isDuplicate =
-        msg.includes("already registered") ||
-        msg.includes("already exist") ||
-        msg.includes("already in use") ||
-        msg.includes("unable to send verification email");
-
-      if (isDuplicate) {
-        setErrorMessage(
-          "⚠️ An account with this email already exists. Please sign in instead."
-        );
-        // Auto-switch to sign-in tab so user knows what to do
+      
+      if (msg.includes("already registered") || msg.includes("already exist") || msg.includes("already in use")) {
+        setErrorMessage("⚠️ An account with this email already exists. Please sign in instead.");
         setMode("signin");
         setPassword("");
-      } else {
-        setErrorMessage(error.message);
+        return;
       }
+      
+      if (msg.includes("rate limit") || msg.includes("sending confirmation")) {
+        setErrorMessage("❌ Email sending failed. Please wait a minute and try again.");
+        return;
+      }
+
+      setErrorMessage(error.message);
       return;
     }
 
-    // Supabase returns user with empty identities array for already-registered emails
-    // (This is a Supabase quirk — it returns 200 but no real new user)
+    // 3. Supabase Quirk: If the user ALREADY EXISTS, it returns data but with empty identities array!
+    // This is the most reliable way to detect duplicate accounts in Supabase.
     if (data?.user && (!data.user.identities || data.user.identities.length === 0)) {
-      setErrorMessage(
-        "⚠️ An account with this email already exists. Please sign in instead."
-      );
+      setErrorMessage("⚠️ An account with this email already exists. Please sign in instead.");
       setMode("signin");
       setPassword("");
       return;
     }
 
-    // New user successfully registered — navigate to email-sent page
+    // 4. Success! A real account was created. Navigate to email-sent page.
     navigate("/email-sent", { state: { email } });
   }
 
   async function handleSignIn() {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    // We use the proxy for sign in so the session is stored in localStorage correctly
+    // for the rest of the app to use
+    const { error } = await proxySupabase.auth.signInWithPassword({ email, password });
+
 
     if (error) {
       const msg = error.message.toLowerCase();
