@@ -73,13 +73,16 @@ function Auth({ onClose }: Props) {
     });
 
     if (error) {
-      // Backend returns "Email already registered. Please sign in." for duplicates
+      // Backend returns "Email already registered. Please sign in." for confirmed duplicates
+      // Backend returns "Unable to send verification email..." for unconfirmed duplicates OR SMTP issues
       const msg = error.message.toLowerCase();
-      if (
+      const isDuplicate =
         msg.includes("already registered") ||
         msg.includes("already exist") ||
-        msg.includes("already in use")
-      ) {
+        msg.includes("already in use") ||
+        msg.includes("unable to send verification email");
+
+      if (isDuplicate) {
         setErrorMessage(
           "⚠️ An account with this email already exists. Please sign in instead."
         );

@@ -111,8 +111,9 @@ app.post("/api/auth/signup", async (req, res) => {
   }
 
   try {
-    // ── Check Supabase Auth for existing user with this email ──
-    // Requires SUPABASE_KEY to be the service role key
+    // ── PRIMARY CHECK: Use admin API to detect existing user BEFORE signUp ──
+    // This works for BOTH confirmed AND unconfirmed existing users.
+    // Requires SUPABASE_KEY to be the SERVICE ROLE key on Railway.
     try {
       const { data: listData, error: listErr } = await supabase.auth.admin.listUsers();
       if (!listErr && listData) {
@@ -125,9 +126,9 @@ app.post("/api/auth/signup", async (req, res) => {
           });
         }
       }
-      // If listUsers fails (e.g. anon key used), we fall through and let signUp handle it
+      // If listUsers fails (anon key used), fall through to signUp + timestamp check
     } catch (adminErr) {
-      console.warn("admin.listUsers() failed — likely using anon key. Falling through to signUp.");
+      console.warn("admin.listUsers() failed — using timestamp fallback.");
     }
 
     // ── Use FRONTEND_URL for the redirect so email links go to Vercel, not Railway ──
@@ -140,12 +141,35 @@ app.post("/api/auth/signup", async (req, res) => {
     });
 
     if (error) {
+      // Supabase throws "Error sending confirmation email" when SMTP fails.
+      // This can happen if: user already exists (unconfirmed) OR real SMTP issue.
+      const errMsg = error.message.toLowerCase();
+      if (errMsg.includes("sending confirmation") || errMsg.includes("smtp") || errMsg.includes("email")) {
+        // Could be existing user — return a safe, actionable error
+        return res.status(400).json({
+          error: "Unable to send verification email. If you already have an account, please sign in instead."
+        });
+      }
       return res.status(400).json({ error: error.message });
     }
 
-    // Supabase quirk: identities is empty array when email is already registered
+    // ── FALLBACK CHECK 1: Empty identities = confirmed existing user (Supabase quirk) ──
     if (data?.user && (!data.user.identities || data.user.identities.length === 0)) {
       return res.status(400).json({ error: "Email already registered. Please sign in." });
+    }
+
+    // ── FALLBACK CHECK 2: Timestamp check for UNCONFIRMED existing users ──
+    // When admin.listUsers() is unavailable (anon key), Supabase re-sends the
+    // confirmation email to an existing unconfirmed user and returns a valid user
+    // object with populated identities. We detect this by checking created_at:
+    // a freshly created user is < 10 seconds old; an existing one is older.
+    if (data?.user?.created_at) {
+      const createdAt = new Date(data.user.created_at).getTime();
+      const ageSeconds = (Date.now() - createdAt) / 1000;
+      if (ageSeconds > 10) {
+        // User was created before this request — they already have an account
+        return res.status(400).json({ error: "Email already registered. Please sign in." });
+      }
     }
 
     return res.json({ data });
@@ -154,6 +178,7 @@ app.post("/api/auth/signup", async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 // Signin Route
 app.post("/api/auth/signin", async (req, res) => {
