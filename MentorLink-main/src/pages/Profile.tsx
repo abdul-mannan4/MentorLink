@@ -96,7 +96,7 @@ function Profile() {
     if (error) {
       console.log(error.message);
     } else {
-      navigate("/dashboard");
+      navigate("/userDashboard");
     }
     setLoading(false);
   };

@@ -87,6 +87,17 @@ app.post("/api/auth/signup", async (req, res) => {
   }
 
   try {
+    // Check if email already exists in profiles table
+    const { data: existingProfile, error: profileErr } = await supabase
+      .from("profile")
+      .select("id")
+      .eq("university_email", email)
+      .maybeSingle();
+
+    if (existingProfile) {
+      return res.status(400).json({ error: "Email already registered. Please sign in." });
+    }
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -97,6 +108,11 @@ app.post("/api/auth/signup", async (req, res) => {
 
     if (error) {
       return res.status(400).json({ error: error.message });
+    }
+
+    // Check if the user already exists in auth (identities is empty for existing emails)
+    if (data?.user && (!data.user.identities || data.user.identities.length === 0)) {
+      return res.status(400).json({ error: "Email already registered. Please sign in." });
     }
 
     return res.json({ data });

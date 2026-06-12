@@ -121,9 +121,8 @@ function Auth({ onClose }: Props) {
         setLoading(false);
         return;
       }
-      navigate("/dashboard")
+      navigate("/student", { replace: true });
       setLoading(false);
-
     }
   }
   return (
