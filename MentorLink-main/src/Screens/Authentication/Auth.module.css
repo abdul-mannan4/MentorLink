@@ -201,6 +201,43 @@
   text-align: center;
 }
 
+.inputLabel {
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: var(--text-body);
+  margin: 0.55rem 0 0.2rem;
+  display: block;
+  letter-spacing: 0.01em;
+}
+
+.fieldError {
+  color: #e74c3c;
+  font-size: 0.8rem;
+  margin: 0.15rem 0 0;
+  padding-left: 0.25rem;
+}
+
+.errorBanner {
+  background: rgba(231, 76, 60, 0.1);
+  border: 1px solid rgba(231, 76, 60, 0.35);
+  border-radius: 0.75rem;
+  color: #e74c3c;
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  margin: 0.5rem 0;
+  text-align: center;
+  line-height: 1.5;
+  animation: shakeIn 0.3s ease;
+}
+
+@keyframes shakeIn {
+  0% { transform: translateX(-6px); opacity: 0; }
+  40% { transform: translateX(6px); }
+  70% { transform: translateX(-3px); }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
 /* Mobile breakpoint */
 @media (max-width: 480px) {
   .loginCard {

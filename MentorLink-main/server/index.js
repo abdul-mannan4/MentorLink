@@ -9,10 +9,11 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// The deployed frontend origin (Vercel). Must be set in Railway env vars.
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+
 // Enable CORS for frontend
-const allowedOrigins = process.env.FRONTEND_URL
-  ? [process.env.FRONTEND_URL, "http://localhost:5173"]
-  : ["http://localhost:5173"];
+const allowedOrigins = [FRONTEND_URL, "http://localhost:5173"];
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -31,6 +32,8 @@ app.use(express.json());
 
 // Initialize Supabase Client
 const supabaseUrl = process.env.SUPABASE_URL;
+// IMPORTANT: SUPABASE_KEY must be your Supabase SERVICE ROLE key (not anon key)
+// The service role key is needed for admin.listUsers() and admin.signOut()
 const supabaseKey = process.env.SUPABASE_KEY;
 
 if (!supabaseUrl || !supabaseKey) {
@@ -70,6 +73,27 @@ async function authenticateUser(req, res, next) {
 
 // ================= AUTHENTICATION ENDPOINTS =================
 
+// ─── Check if email already exists (called before signup to show proper error) ───
+app.post("/api/auth/check-email", async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: "Email is required" });
+
+  try {
+    // Use admin API to look up user by email
+    const { data, error } = await supabase.auth.admin.listUsers();
+    if (error) {
+      // Fallback: just say email is available (signup will catch it)
+      return res.json({ exists: false });
+    }
+    const exists = data.users.some(
+      (u) => u.email?.toLowerCase() === email.toLowerCase()
+    );
+    return res.json({ exists });
+  } catch (err) {
+    return res.json({ exists: false });
+  }
+});
+
 // Signup Route with Backend Regex Validation
 app.post("/api/auth/signup", async (req, res) => {
   const { email, password } = req.body;
@@ -78,39 +102,48 @@ app.post("/api/auth/signup", async (req, res) => {
     return res.status(400).json({ error: "Email and password are required" });
   }
 
-  // Enforce student email regex on backend to prevent hacker bypass
+  // Enforce student email regex on backend to prevent bypass
   const regex = /^(2[0-9])ntucsfl\d{4}@student\.ntu\.edu\.pk$/;
   if (!regex.test(email)) {
     return res.status(400).json({
-      error: "Invalid email format. Use: 23ntucsfl1003@student.ntu.edu.pk"
+      error: "Invalid email format. Use: 20ntucsfl1000@student.ntu.edu.pk"
     });
   }
 
   try {
-    // Check if email already exists in profiles table
-    const { data: existingProfile, error: profileErr } = await supabase
-      .from("profile")
-      .select("id")
-      .eq("university_email", email)
-      .maybeSingle();
-
-    if (existingProfile) {
-      return res.status(400).json({ error: "Email already registered. Please sign in." });
+    // ── Check Supabase Auth for existing user with this email ──
+    // Requires SUPABASE_KEY to be the service role key
+    try {
+      const { data: listData, error: listErr } = await supabase.auth.admin.listUsers();
+      if (!listErr && listData) {
+        const existingUser = listData.users.find(
+          (u) => u.email?.toLowerCase() === email.toLowerCase()
+        );
+        if (existingUser) {
+          return res.status(400).json({
+            error: "Email already registered. Please sign in."
+          });
+        }
+      }
+      // If listUsers fails (e.g. anon key used), we fall through and let signUp handle it
+    } catch (adminErr) {
+      console.warn("admin.listUsers() failed — likely using anon key. Falling through to signUp.");
     }
+
+    // ── Use FRONTEND_URL for the redirect so email links go to Vercel, not Railway ──
+    const emailRedirectTo = `${FRONTEND_URL}/email-verified`;
 
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        emailRedirectTo: req.body.redirectTo || `${req.headers.origin || "http://localhost:5173"}/email-verified`
-      }
+      options: { emailRedirectTo }
     });
 
     if (error) {
       return res.status(400).json({ error: error.message });
     }
 
-    // Check if the user already exists in auth (identities is empty for existing emails)
+    // Supabase quirk: identities is empty array when email is already registered
     if (data?.user && (!data.user.identities || data.user.identities.length === 0)) {
       return res.status(400).json({ error: "Email already registered. Please sign in." });
     }
