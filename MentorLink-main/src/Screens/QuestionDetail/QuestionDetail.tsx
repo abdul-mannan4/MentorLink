@@ -44,118 +44,123 @@ const QuestionDetail = () => {
   useEffect(() => {
     const init = async () => {
       setLoading(true);
-      const { data: authData } = await supabase.auth.getUser();
-      const userId = authData?.user?.id;
-      setCurrentUserId(userId || null);
+      try {
+        const { data: authData } = await supabase.auth.getUser();
+        const userId = authData?.user?.id;
+        setCurrentUserId(userId || null);
 
-      if (userId) {
-        // Check if user is a mentor
-        const { data: mentorData } = await supabase
-          .from("mentor")
-          .select("mentor_id")
-          .eq("mentor_id", userId)
-          .maybeSingle();
-        if (mentorData) setIsMentor(true);
-      }
+        if (userId) {
+          // Check if user is a mentor
+          const { data: mentorData } = await supabase
+            .from("mentor")
+            .select("mentor_id")
+            .eq("mentor_id", userId)
+            .maybeSingle();
+          if (mentorData) setIsMentor(true);
+        }
 
-      if (id) {
-        // Fetch Question
-        const { data: qData } = await supabase
-          .from("question")
-          .select("*")
-          .eq("question_id", id)
-          .maybeSingle();
+        if (id) {
+          // Fetch Question
+          const { data: qData } = await supabase
+            .from("question")
+            .select("*")
+            .eq("question_id", id)
+            .maybeSingle();
 
-        if (qData) {
-          setQuestion(qData);
+          if (qData) {
+            setQuestion(qData);
 
-          if (userId) {
-            // Fetch all subjects completed by the mentor to perform a fuzzy cross-reference
-            const { data: allMentorSubjects } = await supabase
-              .from("mentor_subjects")
-              .select("course_name, marks")
-              .eq("mentor_id", userId);
+            if (userId) {
+              // Fetch all subjects completed by the mentor to perform a fuzzy cross-reference
+              const { data: allMentorSubjects } = await supabase
+                .from("mentor_subjects")
+                .select("course_name, marks")
+                .eq("mentor_id", userId);
 
-            if (allMentorSubjects && allMentorSubjects.length > 0) {
-              const cleanQuestionSubject = qData.subject.toLowerCase().trim();
+              if (allMentorSubjects && allMentorSubjects.length > 0) {
+                const cleanQuestionSubject = qData.subject.toLowerCase().trim();
 
-              // Evaluate matching subjects using resilient string matching rules
-              const matchedSubject = allMentorSubjects.find((s) => {
-                const name = (s.course_name || "").toLowerCase().trim();
-                return (
-                  name === cleanQuestionSubject ||
-                  name.includes(cleanQuestionSubject) ||
-                  cleanQuestionSubject.includes(name)
-                );
-              });
+                // Evaluate matching subjects using resilient string matching rules
+                const matchedSubject = allMentorSubjects.find((s) => {
+                  const name = (s.course_name || "").toLowerCase().trim();
+                  return (
+                    name === cleanQuestionSubject ||
+                    name.includes(cleanQuestionSubject) ||
+                    cleanQuestionSubject.includes(name)
+                  );
+                });
 
-              if (matchedSubject && typeof matchedSubject.marks === "number" && matchedSubject.marks >= 0) {
-                setSubjectTestReady(true);
-                setMentorSubjectScore(matchedSubject.marks);
+                if (matchedSubject && typeof matchedSubject.marks === "number" && matchedSubject.marks >= 0) {
+                  setSubjectTestReady(true);
+                  setMentorSubjectScore(matchedSubject.marks);
+                } else {
+                  setSubjectTestReady(false);
+                  setMentorSubjectScore(matchedSubject ? matchedSubject.marks : null);
+                }
               } else {
                 setSubjectTestReady(false);
-                setMentorSubjectScore(matchedSubject ? matchedSubject.marks : null);
+                setMentorSubjectScore(null);
               }
-            } else {
-              setSubjectTestReady(false);
-              setMentorSubjectScore(null);
+            }
+          }
+
+          // Fetch Replies with Profile Name
+          const { data: rData } = await supabase
+            .from("reply")
+            .select("*")
+            .eq("question_id", id)
+            .order("replied_at", { ascending: true });
+
+          if (rData) {
+            const mentorIds = rData.map((r) => r.mentor_id);
+            const { data: profileData } = await supabase
+              .from("profile")
+              .select("id, user_name")
+              .in("id", mentorIds);
+
+            const profileMap: Record<string, string> = {};
+            profileData?.forEach((p) => {
+              profileMap[p.id] = p.user_name;
+            });
+
+            const enrichedReplies = rData.map((r) => ({
+              ...r,
+              mentor_name: profileMap[r.mentor_id] || "Mentor",
+            }));
+            setReplies(enrichedReplies);
+          }
+
+          // Check if current user liked the question
+          if (userId) {
+            const { data: likeData } = await supabase
+              .from("likes")
+              .select("*")
+              .eq("user_id", userId)
+              .eq("question_id", id)
+              .maybeSingle();
+            if (likeData) setHasLikedQuestion(true);
+
+            // Check liked replies
+            const { data: replyLikes } = await supabase
+              .from("likes")
+              .select("reply_id")
+              .eq("user_id", userId)
+              .not("reply_id", "is", null);
+            
+            if (replyLikes) {
+              const lrMap: Record<string, boolean> = {};
+              replyLikes.forEach((rl) => {
+                if (rl.reply_id) lrMap[rl.reply_id] = true;
+              });
+              setLikedReplies(lrMap);
             }
           }
         }
-
-        // Fetch Replies with Profile Name
-        const { data: rData } = await supabase
-          .from("reply")
-          .select("*")
-          .eq("question_id", id)
-          .order("replied_at", { ascending: true });
-
-        if (rData) {
-          const mentorIds = rData.map((r) => r.mentor_id);
-          const { data: profileData } = await supabase
-            .from("profile")
-            .select("id, user_name")
-            .in("id", mentorIds);
-
-          const profileMap: Record<string, string> = {};
-          profileData?.forEach((p) => {
-            profileMap[p.id] = p.user_name;
-          });
-
-          const enrichedReplies = rData.map((r) => ({
-            ...r,
-            mentor_name: profileMap[r.mentor_id] || "Mentor",
-          }));
-          setReplies(enrichedReplies);
-        }
-
-        // Check if current user liked the question
-        if (userId) {
-          const { data: likeData } = await supabase
-            .from("likes")
-            .select("*")
-            .eq("user_id", userId)
-            .eq("question_id", id)
-            .maybeSingle();
-          if (likeData) setHasLikedQuestion(true);
-
-          // Check liked replies
-          const { data: replyLikes } = await supabase
-            .from("likes")
-            .select("reply_id")
-            .eq("user_id", userId)
-            .not("reply_id", "is", null);
-          
-          if (replyLikes) {
-            const lrMap: Record<string, boolean> = {};
-            replyLikes.forEach((rl) => {
-              if (rl.reply_id) lrMap[rl.reply_id] = true;
-            });
-            setLikedReplies(lrMap);
-          }
-        }
+      } catch (err) {
+        console.error("Error initializing question details:", err);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
     init();
   }, [id]);
