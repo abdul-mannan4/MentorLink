@@ -73,31 +73,26 @@ const StudentDashboard = () => {
         return;
       }
       setLoading(true);
-      try {
-        const { data: authData } = await supabase.auth.getUser();
-        if (!authData?.user) {
-          setError("User not authenticated.");
-          return;
-        }
-
-        const { data, error } = await supabase
-          .from("question")
-          .select("question_id, subject, topic, description, teacher_name, uploaded_at, file_upload")
-          .eq("student_id", authData.user.id)
-          .order("uploaded_at", { ascending: false });
-
-        if (error) {
-          setError("Unable to load questions. Please refresh.");
-        } else if (data) {
-          setQuestions(data as Question[]);
-          setCache("studentDashboardQuestions", data);
-        }
-      } catch (err) {
-        console.error("Error loading dashboard questions:", err);
-        setError("Unable to load questions. Please refresh.");
-      } finally {
+      const { data: authData } = await supabase.auth.getUser();
+      if (!authData?.user) {
+        setError("User not authenticated.");
         setLoading(false);
+        return;
       }
+
+      const { data, error } = await supabase
+        .from("question")
+        .select("question_id, subject, topic, description, teacher_name, uploaded_at, file_upload")
+        .eq("student_id", authData.user.id)
+        .order("uploaded_at", { ascending: false });
+
+      if (error) {
+        setError("Unable to load questions. Please refresh.");
+      } else if (data) {
+        setQuestions(data as Question[]);
+        setCache("studentDashboardQuestions", data);
+      }
+      setLoading(false);
     };
 
     loadQuestions();

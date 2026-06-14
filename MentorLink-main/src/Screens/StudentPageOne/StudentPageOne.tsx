@@ -241,53 +241,51 @@ const StudentPageOne = () => {
       }
 
       setQuestionsLoading(true);
-      try {
-        const { data: authData, error: authError } = await supabase.auth.getUser();
-        if (authError || !authData?.user) {
-          return;
-        }
 
-        const { data: subjectData } = await supabase
-          .from("student_subjects")
-          .select("course_name")
-          .eq("student_id", authData.user.id);
-
-        const subjectNames = subjectData ? subjectData.map((s) => s.course_name) : [];
-        const studentSubjectsSet = new Set(subjectNames);
-
-        const { data: questionData, error: questionError } = await supabase
-          .from("question")
-          .select("*")
-          .order("uploaded_at", { ascending: false });
-
-        if (questionError) {
-          return;
-        }
-
-        const allFetchedQuestions = questionData || [];
-        const matched: Question[] = [];
-        const unmatched: Question[] = [];
-
-        allFetchedQuestions.forEach((q) => {
-          if (studentSubjectsSet.has(q.subject)) {
-            matched.push(q);
-          } else {
-            unmatched.push(q);
-          }
-        });
-
-        setCache("questions", allFetchedQuestions);
-        setCache("studentSubjects", subjectNames);
-
-        setAllMatchedQuestions(matched);
-        setMatchedQuestions(matched);
-        setAllUnmatchedQuestions(unmatched);
-        setUnmatchedQuestions(unmatched);
-      } catch (err) {
-        console.error("Error fetching questions:", err);
-      } finally {
+      const { data: authData, error: authError } = await supabase.auth.getUser();
+      if (authError || !authData?.user) {
         setQuestionsLoading(false);
+        return;
       }
+
+      const { data: subjectData } = await supabase
+        .from("student_subjects")
+        .select("course_name")
+        .eq("student_id", authData.user.id);
+
+      const subjectNames = subjectData ? subjectData.map((s) => s.course_name) : [];
+      const studentSubjectsSet = new Set(subjectNames);
+
+      const { data: questionData, error: questionError } = await supabase
+        .from("question")
+        .select("*")
+        .order("uploaded_at", { ascending: false });
+
+      if (questionError) {
+        setQuestionsLoading(false);
+        return;
+      }
+
+      const allFetchedQuestions = questionData || [];
+      const matched: Question[] = [];
+      const unmatched: Question[] = [];
+
+      allFetchedQuestions.forEach((q) => {
+        if (studentSubjectsSet.has(q.subject)) {
+          matched.push(q);
+        } else {
+          unmatched.push(q);
+        }
+      });
+
+      setCache("questions", allFetchedQuestions);
+      setCache("studentSubjects", subjectNames);
+
+      setAllMatchedQuestions(matched);
+      setMatchedQuestions(matched);
+      setAllUnmatchedQuestions(unmatched);
+      setUnmatchedQuestions(unmatched);
+      setQuestionsLoading(false);
     };
 
     fetchQuestions();
@@ -372,9 +370,7 @@ const StudentPageOne = () => {
           .from("mentor")
           .select("mentor_id, Description");
 
-        if (mentorError) {
-          return;
-        }
+        if (mentorError) return;
         const mentorIds = (mentorRows || []).map((m: any) => m.mentor_id).filter(Boolean);
 
         if (mentorIds.length === 0) {

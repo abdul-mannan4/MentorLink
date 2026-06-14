@@ -12,7 +12,7 @@
 .profileCard {
     width: 100%;
     max-width: 600px;
-    background: #ffffff;
+    background: var(--bg-surface);
     border-radius: 16px;
     padding: 30px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.15);
@@ -44,21 +44,31 @@
 /* INPUTS */
 
 .form input,
-.form select {
+.form select,
+.form textarea {
     width: 100%;
     padding: 10px;
     border-radius: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border);
+    background-color: var(--bg-page);
+    color: var(--text-heading);
     outline: none;
     font-size: 14px;
     transition: 0.2s;
     box-sizing: border-box;
+    font-family: inherit;
 }
 
 .form input:focus,
-.form select:focus {
-    border-color: #3b5bdb;
-    box-shadow: 0 0 10px rgba(59,91,219,0.3);
+.form select:focus,
+.form textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(59, 91, 219, 0.3);
+}
+
+.form select option {
+    background-color: var(--bg-surface);
+    color: var(--text-heading);
 }
 
 
@@ -114,4 +124,22 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+}
+
+.error {
+    color: #ef4444;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.form input:disabled,
+.form select:disabled,
+.form textarea:disabled {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+    border-color: var(--border);
+    opacity: 0.85;
+    cursor: not-allowed;
 }

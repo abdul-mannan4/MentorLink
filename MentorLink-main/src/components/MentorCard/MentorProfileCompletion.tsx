@@ -19,6 +19,7 @@ function MentorProfileCompletion() {
   const [description, setDescription] = useState("");
   const [expertSubjects, setExpertSubjects] = useState<string[]>([]);
   const [mentorExists, setMentorExists] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const signedUrl = useSignedImage(profileImage);
 
@@ -68,14 +69,15 @@ function MentorProfileCompletion() {
   // ================= SAVE MENTOR PROFILE =================
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setErrorMessage("");
     
     if (expertSubjects.length !== 3) {
-      console.error("Please select exactly 3 subjects.");
+      setErrorMessage("Please select exactly 3 subjects.");
       return;
     }
 
     if (!description.trim()) {
-      console.error("Please provide a description (bio).");
+      setErrorMessage("Please provide a description (bio).");
       return;
     }
 
@@ -84,7 +86,7 @@ function MentorProfileCompletion() {
     const { data: userData } = await supabase.auth.getUser();
 
     if (!userData.user) {
-      console.log("No user found");
+      setErrorMessage("No user session found. Please log in.");
       setLoading(false);
       return;
     }
@@ -102,7 +104,7 @@ function MentorProfileCompletion() {
 
     if (mentorError) {
       console.log("Error inserting mentor:", mentorError.message);
-      console.error("Error saving mentor profile: " + mentorError.message);
+      setErrorMessage("Error saving mentor profile: " + mentorError.message);
       setLoading(false);
       return;
     }
@@ -115,7 +117,7 @@ function MentorProfileCompletion() {
 
     if (deleteError) {
       console.log("Delete subjects error:", deleteError.message);
-      console.error("Error preparing subjects: " + deleteError.message);
+      setErrorMessage("Error preparing subjects: " + deleteError.message);
       setLoading(false);
       return;
     }
@@ -132,7 +134,7 @@ function MentorProfileCompletion() {
 
     if (subjectError) {
       console.log("Insert mentor subjects error:", subjectError.message);
-      console.error("Error saving subjects: " + subjectError.message);
+      setErrorMessage("Error saving subjects: " + subjectError.message);
       setLoading(false);
       return;
     }
@@ -188,7 +190,6 @@ function MentorProfileCompletion() {
               onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
                 setDescription(e.target.value)
               }
-              style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid #ccc", outline: "none" }}
             />
           </div>
 
@@ -208,6 +209,9 @@ function MentorProfileCompletion() {
               </p>
             )}
           </div>
+
+          {/* ERROR DISPLAY */}
+          {errorMessage && <p className={style.error}>{errorMessage}</p>}
 
           {/* BUTTON */}
           <button type="submit" className={style.submitBtn} disabled={loading || expertSubjects.length !== 3}>

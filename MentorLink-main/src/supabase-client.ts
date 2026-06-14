@@ -142,6 +142,12 @@ class MockBuilder {
       });
       const json = await res.json();
       if (!res.ok) {
+        if (res.status === 401) {
+          localStorage.removeItem("sb-session");
+          localStorage.removeItem("sb-user");
+          clearCache();
+          triggerAuthChange("SIGNED_OUT", null);
+        }
         return { data: null, count: null, error: { message: json.error || "Query failed" } };
       }
       return { data: json.data, count: json.count, error: null };
@@ -252,6 +258,12 @@ export const supabase = {
         });
         const json = await res.json();
         if (!res.ok) {
+          if (res.status === 401) {
+            localStorage.removeItem("sb-session");
+            localStorage.removeItem("sb-user");
+            clearCache();
+            triggerAuthChange("SIGNED_OUT", null);
+          }
           return { data: { user: null }, error: { message: json.error || "Failed to fetch user" } };
         }
         localStorage.setItem("sb-user", JSON.stringify(json.user));

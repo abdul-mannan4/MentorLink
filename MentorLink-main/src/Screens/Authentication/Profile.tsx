@@ -25,6 +25,7 @@ function Profile() {
   const [difficultSubjects, setDifficultSubjects] = useState<string[]>([]);
 
   const [profileImage, setProfileImage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const signedUrl = useSignedImage(profileImage);
 
@@ -93,11 +94,12 @@ function Profile() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    setErrorMessage("");
 
     const { data: userData } = await supabase.auth.getUser();
 
     if (!userData.user) {
-      console.log("No user found");
+      setErrorMessage("No user session found. Please log in.");
       setLoading(false);
       return;
     }
@@ -119,6 +121,7 @@ function Profile() {
 
     if (error) {
       console.log(error.message);
+      setErrorMessage(error.message);
       setLoading(false);
       return;
     }
@@ -131,6 +134,7 @@ function Profile() {
 
     if (deleteError) {
       console.log("Delete subjects error:", deleteError.message);
+      setErrorMessage("Failed to update subjects: " + deleteError.message);
       setLoading(false);
       return;
     }
@@ -147,6 +151,7 @@ function Profile() {
 
       if (subjectError) {
         console.log("Insert subjects error:", subjectError.message);
+        setErrorMessage("Failed to save subjects: " + subjectError.message);
         setLoading(false);
         return;
       }
@@ -281,8 +286,11 @@ function Profile() {
             </div>
           </div>
 
+          {/* ERROR DISPLAY */}
+          {errorMessage && <p className={style.error}>{errorMessage}</p>}
+
           {/* BUTTON */}
-          <button type="submit" className={style.submitBtn}>
+          <button type="submit" className={style.submitBtn} disabled={loading}>
             {loading ? "Saving..." : "Save & Continue"}
           </button>
         </form>
