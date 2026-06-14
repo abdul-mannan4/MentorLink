@@ -1,0 +1,156 @@
+
+.navActions{
+    display: flex;
+    align-items: center;
+}
+
+/* --- Layout root --- */
+.TopContainer {
+  font-family: var(--font-main);
+  background-color: var(--bg-page);
+  color: var(--text-body);
+}
+
+/* --- Navbar --- */
+.LandingNavbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1.5px solid var(--border);
+  width: 100%;
+  padding: 1rem ;
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  margin: 0;
+  box-sizing: border-box;
+  z-index: 1000;
+  background-color: var(--bg-page);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  margin-right: 10px;
+}
+
+.logoName {
+  color: var(--primary);
+  font-weight: 400;
+  transition: transform 0.5s ease;
+  text-decoration: none;
+}
+.logoName:hover {
+  transform: scale(1.05);
+  font-weight: bold;
+}
+
+.searchBar{
+       border:0.15rem solid var(--bg-page);
+       /* height: 2rem; */
+       padding: 0.5rem;
+       border-radius: 2rem;
+       color: var(--text-body);
+       background-color: var(--bg-surface);
+       transition: transform 1s ease;
+       margin-right: 2rem;
+}
+.searchBar:hover{
+       transform: scale(1.05);
+       border-color: var(--primary); 
+}
+.searchBar:focus {
+    transform: scale(1.05);
+    outline: none; 
+    border-color: var(--primary); 
+    box-shadow: 2px 2px 8px rgba(59, 130, 246 0.2); 
+}
+.profilePic{
+  height: 2.5rem;
+  width: 2.5rem;
+  background-color:var(--text-heading);
+  border-radius: 50%;
+
+
+}
+.profileSideBar{
+  position: relative;
+  cursor: pointer;
+}
+.sideBar {
+  position: absolute;
+  top: 150%;     
+  right: -1rem;      
+  width: 200px;
+  z-index: 1000;
+  border: 0.1rem solid var(--primary);
+  background-color: #1a1a1a; 
+  padding: 10px;            
+}
+@media (max-width: 768px) {
+  /* 1. Shrink Logo Name */
+  .logo-text-rest {
+    display: none; /* Only 'M' will remain visible */
+  }
+
+  /* 3. Shrink Auth Buttons */
+  .buttonSignIn, 
+  .buttonSignUp {
+    width: 4.2rem;    /* Reduced from 5rem */
+    height: 1.8rem;   /* Reduced from 2rem */
+    font-size: 0.75rem; /* Smaller text for smaller buttons */
+    margin: 0 0.4rem;  /* Tighten spacing */
+  }
+
+  .LandingNavbar {
+    padding: 0.8rem 1rem; /* Less padding on the sides of the bar */
+  }
+
+  .heroButton {
+    flex-direction: column;
+    height: auto;
+    gap: 15px;
+    margin-top: 1rem;
+  }
+  .statsContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .firstLineHero  { font-size: 1.6rem; }
+  .secondLineHero { font-size: 1.8rem; }
+  .footerButton {
+    font-size: 0.75rem; 
+    padding: 0.2rem 0.5rem; 
+  }
+}
+
+@media (max-width: 480px) {
+  /* 4. Extra small screens (Mobile) */
+  .buttonSignIn, 
+  .buttonSignUp {
+    width: 3.8rem;
+    font-size: 0.7rem;
+    margin: 0 0.2rem;
+  }
+
+  .navActions {
+    gap: 4px; /* Pack them tighter */
+  }
+  .statsContainer {
+    grid-template-columns: 1fr;
+  }
+ .footerButton {
+    font-size: 0.65rem;
+    padding: 0.15rem 0.3rem;
+  }
+}
