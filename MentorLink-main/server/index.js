@@ -14,22 +14,12 @@ dotenv.config({ path: path.resolve(__dirname, ".env") });
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Enable CORS for frontend
-const allowedOrigins = process.env.FRONTEND_URL
-  ? [process.env.FRONTEND_URL, "http://localhost:5173"]
-  : ["http://localhost:5173"];
-
+// Enable CORS for frontend (allows localhost and deployed Vercel/custom domains)
 app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, curl, Postman)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.some(o => origin === o || origin.endsWith(".vercel.app"))) {
-      return callback(null, true);
-    }
-    return callback(new Error("Not allowed by CORS"));
-  },
+  origin: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
 }));
 
 app.use(express.json());
