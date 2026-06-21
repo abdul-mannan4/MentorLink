@@ -941,7 +941,7 @@ const StudentPageOne = () => {
         {activeTab === "chats" && (
           <div className={styles.questionsSection}>
             <div className={styles.questionBlockTitle}><h3 className={styles.sectionTitle}>Your Mentor Chats</h3></div>
-            <div className={styles['mentor-chat-workspace']}>
+            <div className={styles['mentor-chat-workspace']} data-chat-selected={selectedChat ? "true" : "false"}>
               <div className={styles['mentor-chat-sidebar']}>
                 <h3 className={styles['sidebar-title']}>Active Chats</h3>
                 <div className={styles['sidebar-list']}>

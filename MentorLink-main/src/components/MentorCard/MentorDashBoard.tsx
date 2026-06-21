@@ -1021,7 +1021,7 @@ export default function MentorDashboard() {
               </>
             ) : (
               /* Chat Workspace Pane */
-              <div className={style['mentor-chat-workspace']}>
+              <div className={style['mentor-chat-workspace']} data-chat-selected={selectedChat ? "true" : "false"}>
                 {/* Left Sidebar Pane: Active Chats */}
                 <div className={style['mentor-chat-sidebar']}>
                   <h3 className={style['sidebar-title']}>Active Chats</h3>

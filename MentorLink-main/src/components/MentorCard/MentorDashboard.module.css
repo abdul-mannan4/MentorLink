@@ -1245,17 +1245,39 @@
   cursor: not-allowed;
 }
 
-/* Responsive constraints for dashboard chat tab */
+/* ── Mobile responsive chat workspace ── */
 @media (max-width: 768px) {
   .mentor-chat-workspace {
     grid-template-columns: 1fr;
-    height: 500px;
+    height: 100%;
+    min-height: 520px;
+    border-radius: 12px;
+    position: relative;
   }
+
+  /* On mobile default: show sidebar, hide thread */
   .mentor-chat-sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .mentor-chat-thread {
     display: none;
   }
-  .mentor-chat-sidebar.active {
+
+  /* When a chat IS selected: hide sidebar, show thread full-screen */
+  .mentor-chat-workspace[data-chat-selected="true"] .mentor-chat-sidebar {
+    display: none;
+  }
+  .mentor-chat-workspace[data-chat-selected="true"] .mentor-chat-thread {
     display: flex;
+    flex-direction: column;
+    height: 520px;
+  }
+
+  /* Give the back button a visible left arrow on mobile thread view */
+  .chat-room-back-btn {
+    display: flex !important;
   }
 }
 

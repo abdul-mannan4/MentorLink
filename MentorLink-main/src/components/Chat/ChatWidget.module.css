@@ -546,11 +546,36 @@
   background: #fee2e2;
 }
 
-/* Mobile Responsiveness */
-@media (max-width: 480px) {
+/* Mobile Responsiveness - floating widget */
+@media (max-width: 600px) {
+  .widgetContainer {
+    bottom: 16px;
+    right: 16px;
+  }
+
   .chatPanel {
-    width: calc(100vw - 32px);
-    right: -8px;
-    height: 480px;
+    /* Near full-screen on phones */
+    position: fixed;
+    bottom: 80px;
+    right: 8px;
+    left: 8px;
+    width: auto;
+    height: calc(100dvh - 120px);
+    max-height: 600px;
+    border-radius: 16px;
+  }
+}
+
+@media (max-width: 400px) {
+  .chatPanel {
+    bottom: 76px;
+    right: 4px;
+    left: 4px;
+    height: calc(100dvh - 110px);
+  }
+
+  .floatingBubble {
+    width: 50px;
+    height: 50px;
   }
 }
