@@ -271,8 +271,10 @@ export default function MentorDashboard() {
       const safeSubjects = subjs ?? [];
       const totalReplies = replies?.length ?? 0;
 
-      const avgScore = safeSubjects.length > 0
-        ? safeSubjects.reduce((sum: number, s: Subject) => sum + (s.marks >= 0 ? s.marks : 0), 0) / safeSubjects.length
+      // Filter out pending subjects (marks === -1)
+      const completedSubjectsList = safeSubjects.filter((s: Subject) => s.marks >= 0);
+      const avgScore = completedSubjectsList.length > 0
+        ? completedSubjectsList.reduce((sum: number, s: Subject) => sum + s.marks, 0) / completedSubjectsList.length
         : 0;
 
       const points = (avgScore * 8) + (totalReplies * 4) + (Math.log1p(totalReplies) * 5);
@@ -306,10 +308,11 @@ export default function MentorDashboard() {
 
         scoreboard.sort((a: { id: string; score: number }, b: { id: string; score: number }) => b.score - a.score);
         const derivedRank = scoreboard.findIndex((item: { id: string; score: number }) => item.id === currentUserId) + 1;
+        const activePoints = scoreboard.find((item: { id: string; score: number }) => item.id === currentUserId)?.score || points;
 
         const rankObj = {
           current_rank: derivedRank > 0 ? derivedRank : 1,
-          points: Math.round(points),
+          points: Math.round(activePoints),
           total_replies: totalReplies,
         };
         setMentorRank(rankObj);
