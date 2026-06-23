@@ -24,7 +24,7 @@ type Props = {
 
   function isValidStudentEmail(email: string) {
     const regex = /^(2[0-9])ntucsfl\d{4}@student\.ntu\.edu\.pk$/;
-    return regex.test(email) || email.toLowerCase().endsWith("@gmail.com");
+    return regex.test(email);
   }
 
   async function handleForgotSubmit(e: React.FormEvent<HTMLFormElement>) {

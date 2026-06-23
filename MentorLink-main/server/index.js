@@ -93,7 +93,7 @@ app.post("/api/auth/signup", async (req, res) => {
 
   // Enforce student email regex on backend to prevent hacker bypass
   const regex = /^(2[0-9])ntucsfl\d{4}@student\.ntu\.edu\.pk$/;
-  if (!regex.test(email) && !email.toLowerCase().endsWith("@gmail.com")) {
+  if (!regex.test(email)) {
     return res.status(400).json({
       error: "Invalid email format. Use: 23ntucsfl1003@student.ntu.edu.pk"
     });
