@@ -343,15 +343,20 @@ export const supabase = {
 
     async verifyOtp(params: any) {
       try {
+        const body: any = { type: params.type };
+        if (params.token_hash) {
+          body.token_hash = params.token_hash;
+        } else {
+          body.email = params.email;
+          body.token = params.token;
+        }
+
         const res = await fetch(`${API_URL}/auth/verify-otp`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({
-            token_hash: params.token_hash,
-            type: params.type
-          })
+          body: JSON.stringify(body)
         });
 
         const json = await res.json();

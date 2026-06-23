@@ -195,17 +195,26 @@ app.get("/api/auth/me", authenticateUser, (req, res) => {
 
 // Verify OTP Route (used for email verification confirmation)
 app.post("/api/auth/verify-otp", async (req, res) => {
-  const { token_hash, type } = req.body;
+  const { token_hash, email, token, type } = req.body;
 
-  if (!token_hash || !type) {
-    return res.status(400).json({ error: "token_hash and type are required" });
+  if (!type) {
+    return res.status(400).json({ error: "type is required" });
+  }
+
+  if (!token_hash && (!email || !token)) {
+    return res.status(400).json({ error: "Either token_hash OR email and token are required" });
   }
 
   try {
-    const { data, error } = await supabase.auth.verifyOtp({
-      token_hash,
-      type
-    });
+    const verifyParams = { type };
+    if (token_hash) {
+      verifyParams.token_hash = token_hash;
+    } else {
+      verifyParams.email = email;
+      verifyParams.token = token;
+    }
+
+    const { data, error } = await supabase.auth.verifyOtp(verifyParams);
 
     if (error) {
       return res.status(400).json({ error: error.message });
