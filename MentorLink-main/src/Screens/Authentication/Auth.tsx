@@ -189,11 +189,25 @@ type Props = {
                 </div>
                 <h3 style={{ fontSize: "1.25rem", fontWeight: 700, margin: "1rem 0" }}>Check Your Inbox</h3>
                 <p className={style.subtitle}>
-                  We've sent a password reset link to <strong>{email}</strong>. Please follow the instructions in the email.
+                  We've sent a password reset code to <strong>{email}</strong>. Please check your inbox (including Junk folder) for the code.
                 </p>
+                
                 <button
                   type="button"
                   className={style.submitBtn}
+                  style={{ marginBottom: "0.5rem" }}
+                  onClick={() => {
+                    onClose();
+                    navigate("/reset-password");
+                  }}
+                >
+                  Enter Code Manually
+                </button>
+
+                <button
+                  type="button"
+                  className={style.backToLoginBtn}
+                  style={{ width: "100%", background: "none", border: "none", color: "#6b7280", cursor: "pointer", fontSize: "0.875rem", marginTop: "0.5rem" }}
                   onClick={() => {
                     setView("auth");
                     setForgotSuccess(false);
