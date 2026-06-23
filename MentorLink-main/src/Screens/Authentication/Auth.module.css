@@ -282,3 +282,50 @@
     transform: rotate(360deg);
   }
 }
+
+.forgotLink {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-family: var(--font-main);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.forgotLink:hover {
+  color: var(--cta-bg);
+  text-decoration: underline;
+}
+
+.backToLoginBtn {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  transition: color 0.2s ease;
+  width: 100%;
+  text-align: center;
+}
+
+.backToLoginBtn:hover {
+  color: var(--text-heading);
+}
+
+.successIconWrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.successState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

@@ -9,13 +9,13 @@ import { Eye, EyeOff, X } from "lucide-react";
 
 type Props = {
   onClose: () => void;
-};
-
-function Auth({ onClose }: Props) {
+};function Auth({ onClose }: Props) {
+  const [view, setView] = useState<"auth" | "forgot">("auth");
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [forgotSuccess, setForgotSuccess] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -25,6 +25,39 @@ function Auth({ onClose }: Props) {
   function isValidStudentEmail(email: string) {
     const regex = /^(2[0-9])ntucsfl\d{4}@student\.ntu\.edu\.pk$/;
     return regex.test(email);
+  }
+
+  async function handleForgotSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setLoading(true);
+    setErrorMessage("");
+
+    if (!email) {
+      setErrorMessage("Email is required.");
+      setLoading(false);
+      return;
+    }
+
+    if (!isValidStudentEmail(email)) {
+      setErrorMessage(
+        "Invalid email format. Use: 23ntucsfl1003@student.ntu.edu.pk"
+      );
+      setLoading(false);
+      return;
+    }
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+
+    if (error) {
+      setErrorMessage(error.message);
+      setLoading(false);
+      return;
+    }
+
+    setForgotSuccess(true);
+    setLoading(false);
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -84,7 +117,6 @@ function Auth({ onClose }: Props) {
       setLoading(false);
     }
   }
-
   return (
     <div className={style.overlay}>
       <div className={style.loginCard}>
@@ -94,110 +126,205 @@ function Auth({ onClose }: Props) {
           </button>
         </div>
         
-        <h2 className={style.title}>MentorLink</h2>
-        
-        <p className={style.subtitle}>
-          {isSignUp 
-            ? "Create your student account to connect with mentors." 
-            : "Sign in to your student account to connect with mentors."}
-        </p>
+        {view === "forgot" ? (
+          <>
+            <h2 className={style.title}>Reset Password</h2>
+            {!forgotSuccess ? (
+              <>
+                <p className={style.subtitle}>
+                  Enter your student email and we'll send you a link to reset your password.
+                </p>
 
-        {/* Tab Switcher */}
-        <div className={style.tabContainer}>
-          <button 
-            type="button" 
-            className={`${style.tab} ${!isSignUp ? style.activeTab : style.inactiveTab}`}
-            onClick={() => {
-              setIsSignUp(false);
-              setErrorMessage("");
-            }}
-          >
-            Sign In
-          </button>
-          <button 
-            type="button" 
-            className={`${style.tab} ${isSignUp ? style.activeTab : style.inactiveTab}`}
-            onClick={() => {
-              setIsSignUp(true);
-              setErrorMessage("");
-            }}
-          >
-            Sign Up
-          </button>
-        </div>
+                <form onSubmit={handleForgotSubmit} className={style.form}>
+                  <div className={style.inputGroup}>
+                    <label className={style.label}>Student Email</label>
+                    <input
+                      className={style.input}
+                      type="email"
+                      placeholder="23ntucsfl1003@student.ntu.edu.pk"
+                      value={email}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        setEmail(e.target.value)
+                      }
+                      autoComplete="email"
+                      required
+                    />
+                    {errorMessage && <p className={style.error}>{errorMessage}</p>}
+                  </div>
 
-        <form onSubmit={handleSubmit} className={style.form}>
-          <div className={style.inputGroup}>
-            <label className={style.label}>Student Email</label>
-            <input
-              className={style.input}
-              type="email"
-              placeholder="23ntucsfl1003@student.ntu.edu.pk"
-              value={email}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setEmail(e.target.value)
-              }
-              autoComplete="email"
-              required
-            />
-          </div>
+                  <button
+                    className={style.submitBtn}
+                    type="submit"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <span className={style.spinner}></span>
+                    ) : (
+                      "Send Reset Link"
+                    )}
+                  </button>
 
-          <div className={style.inputGroup}>
-            <label className={style.label}>Password</label>
-            <div className={style.passwordWrapper}>
-              <input
-                className={`${style.input} ${style.passwordInput}`}
-                type={showPassword ? "text" : "password"}
-                placeholder="••••••••••••••••••••••••"
-                value={password}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setPassword(e.target.value)
-                }
-                autoComplete={isSignUp ? "new-password" : "current-password"}
-                required
-              />
-              <button
-                className={style.togglePassword}
-                type="button"
-                onClick={() => setShowPassword((p) => !p)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                  <button
+                    type="button"
+                    className={style.backToLoginBtn}
+                    onClick={() => {
+                      setView("auth");
+                      setErrorMessage("");
+                    }}
+                  >
+                    Back to Sign In
+                  </button>
+                </form>
+              </>
+            ) : (
+              <div className={style.successState}>
+                <div className={style.successIconWrapper}>
+                  <svg className={style.circleSvg} viewBox="0 0 52 52" style={{ width: 64, height: 64, margin: "1.5rem auto" }}>
+                    <circle className={style.circle} cx="26" cy="26" r="22" stroke="#22c55e" strokeWidth="3" fill="none" />
+                    <path className={style.check} d="M14 27 l8 8 l16 -16" stroke="#22c55e" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                  </svg>
+                </div>
+                <h3 style={{ fontSize: "1.25rem", fontWeight: 700, margin: "1rem 0" }}>Check Your Inbox</h3>
+                <p className={style.subtitle}>
+                  We've sent a password reset link to <strong>{email}</strong>. Please follow the instructions in the email.
+                </p>
+                <button
+                  type="button"
+                  className={style.submitBtn}
+                  onClick={() => {
+                    setView("auth");
+                    setForgotSuccess(false);
+                    setEmail("");
+                    setErrorMessage("");
+                  }}
+                >
+                  Back to Sign In
+                </button>
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            <h2 className={style.title}>MentorLink</h2>
+            <p className={style.subtitle}>
+              {isSignUp 
+                ? "Create your student account to connect with mentors." 
+                : "Sign in to your student account to connect with mentors."}
+            </p>
+
+            {/* Tab Switcher */}
+            <div className={style.tabContainer}>
+              <button 
+                type="button" 
+                className={`${style.tab} ${!isSignUp ? style.activeTab : style.inactiveTab}`}
+                onClick={() => {
+                  setIsSignUp(false);
+                  setErrorMessage("");
+                }}
               >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                Sign In
+              </button>
+              <button 
+                type="button" 
+                className={`${style.tab} ${isSignUp ? style.activeTab : style.inactiveTab}`}
+                onClick={() => {
+                  setIsSignUp(true);
+                  setErrorMessage("");
+                }}
+              >
+                Sign Up
               </button>
             </div>
-            {errorMessage && <p className={style.error}>{errorMessage}</p>}
-          </div>
 
-          <button
-            className={style.submitBtn}
-            type="submit"
-            disabled={loading}
-          >
-            {loading ? (
-              <span className={style.spinner}></span>
-            ) : isSignUp ? (
-              "Create Account"
-            ) : (
-              "Sign In"
-            )}
-          </button>
+            <form onSubmit={handleSubmit} className={style.form}>
+              <div className={style.inputGroup}>
+                <label className={style.label}>Student Email</label>
+                <input
+                  className={style.input}
+                  type="email"
+                  placeholder="23ntucsfl1003@student.ntu.edu.pk"
+                  value={email}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setEmail(e.target.value)
+                  }
+                  autoComplete="email"
+                  required
+                />
+              </div>
 
-          <div className={style.footer}>
-            <span>
-              {isSignUp ? "Already have an account?" : "Don't have an account?"}
-            </span>
-            <button
-              type="button"
-              className={style.footerBtn}
-              onClick={() => {
-                setIsSignUp((p) => !p);
-                setErrorMessage("");
-              }}
-            >
-              {isSignUp ? "Sign In" : "Sign Up"}
-            </button>
-          </div>
-        </form>
+              <div className={style.inputGroup}>
+                <label className={style.label}>Password</label>
+                <div className={style.passwordWrapper}>
+                  <input
+                    className={`${style.input} ${style.passwordInput}`}
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••••••••••••••••••"
+                    value={password}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      setPassword(e.target.value)
+                    }
+                    autoComplete={isSignUp ? "new-password" : "current-password"}
+                    required
+                  />
+                  <button
+                    className={style.togglePassword}
+                    type="button"
+                    onClick={() => setShowPassword((p) => !p)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                {errorMessage && <p className={style.error}>{errorMessage}</p>}
+                {!isSignUp && (
+                  <div style={{ textAlign: "right", marginTop: "0.5rem" }}>
+                    <button
+                      type="button"
+                      className={style.forgotLink}
+                      onClick={() => {
+                        setView("forgot");
+                        setErrorMessage("");
+                        setForgotSuccess(false);
+                      }}
+                    >
+                      Forgot Password?
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <button
+                className={style.submitBtn}
+                type="submit"
+                disabled={loading}
+              >
+                {loading ? (
+                  <span className={style.spinner}></span>
+                ) : isSignUp ? (
+                  "Create Account"
+                ) : (
+                  "Sign In"
+                )}
+              </button>
+
+              <div className={style.footer}>
+                <span>
+                  {isSignUp ? "Already have an account?" : "Don't have an account?"}
+                </span>
+                <button
+                  type="button"
+                  className={style.footerBtn}
+                  onClick={() => {
+                    setIsSignUp((p) => !p);
+                    setErrorMessage("");
+                  }}
+                >
+                  {isSignUp ? "Sign In" : "Sign Up"}
+                </button>
+              </div>
+            </form>
+          </>
+        )}
       </div>
     </div>
   );

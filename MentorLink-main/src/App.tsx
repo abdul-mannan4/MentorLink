@@ -5,6 +5,7 @@ import Auth from "./Screens/Authentication/Auth";
 import EmailSent from "./Screens/Authentication/EmailSent";
 import EmailVerified from "./Screens/Authentication/EmailVerified";
 import Profile from "./Screens/Authentication/Profile";
+import ResetPassword from "./Screens/Authentication/ResetPassword";
 
 import LandingPage from "./Screens/LandingPage/LandingPage";
 import StudentPageOne from "./Screens/StudentPageOne/StudentPageOne";
@@ -25,6 +26,7 @@ const App = () => {
         <Route path="/email-sent" element={<EmailSent />} />
         <Route path="/email-verified" element={<EmailVerified />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/userDashboard" element={<StudentPageOne />} />
         <Route path="/student-dashboard" element={<StudentDashboard />} />
         <Route path="/mentor-profile" element={<MentorProfileCompletion />} />

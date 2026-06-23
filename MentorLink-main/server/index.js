@@ -243,6 +243,58 @@ app.post("/api/auth/resend", async (req, res) => {
   }
 });
 
+// Request Password Reset Link Route
+app.post("/api/auth/reset-password-request", async (req, res) => {
+  const { email, redirectTo } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ error: "Email is required" });
+  }
+
+  try {
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: redirectTo || `${req.headers.origin || "http://localhost:5173"}/reset-password`
+    });
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    return res.json({ data, message: "Password reset link sent successfully" });
+  } catch (err) {
+    console.error("Reset password request error:", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Update User Route (e.g. password)
+app.post("/api/auth/update-user", authenticateUser, async (req, res) => {
+  const { password } = req.body;
+
+  if (!password) {
+    return res.status(400).json({ error: "Password is required" });
+  }
+
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const userSupabase = createClient(supabaseUrl, supabaseKey, {
+      auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+      global: { headers: { Authorization: `Bearer ${token}` } }
+    });
+
+    const { data, error } = await userSupabase.auth.updateUser({ password });
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    return res.json({ data, message: "User password updated successfully" });
+  } catch (err) {
+    console.error("Update user error:", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 // ================= PUBLIC MENTOR BROWSE ENDPOINT =================
 // This endpoint is unauthenticated and returns public mentor data for the landing page.

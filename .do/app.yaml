@@ -33,6 +33,7 @@ static_sites:
     source_dir: MentorLink-main
     build_command: npm run build
     output_dir: dist
+    catchall_document: index.html
     envs:
       - key: VITE_SUPABASE_URL
         scope: BUILD_TIME

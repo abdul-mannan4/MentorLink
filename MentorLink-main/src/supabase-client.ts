@@ -395,6 +395,59 @@ export const supabase = {
       }
     },
 
+    async resetPasswordForEmail(email: string, options?: { redirectTo?: string }) {
+      try {
+        const res = await fetch(`${API_URL}/auth/reset-password-request`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email,
+            redirectTo: options?.redirectTo
+          })
+        });
+
+        const json = await res.json();
+        if (!res.ok) {
+          return { data: null, error: { message: json.error || "Password reset request failed" } };
+        }
+
+        return { data: json.data, error: null };
+      } catch (err: any) {
+        return { data: null, error: { message: getFriendlyErrorMessage(err) } };
+      }
+    },
+
+    async updateUser(params: { password?: string }) {
+      const token = await refreshSessionIfNeeded();
+      if (!token) return { data: null, error: { message: "No active session" } };
+
+      try {
+        const res = await fetch(`${API_URL}/auth/update-user`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify(params)
+        });
+
+        const json = await res.json();
+        if (!res.ok) {
+          return { data: null, error: { message: json.error || "Update user failed" } };
+        }
+
+        if (json.data?.user) {
+          localStorage.setItem("sb-user", JSON.stringify(json.data.user));
+        }
+
+        return { data: json.data, error: null };
+      } catch (err: any) {
+        return { data: null, error: { message: getFriendlyErrorMessage(err) } };
+      }
+    },
+
     onAuthStateChange(callback: (event: string, session: any) => void) {
       authListeners.add(callback);
       
