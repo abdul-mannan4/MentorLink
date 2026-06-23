@@ -59,8 +59,9 @@ type Props = {
       return;
     }
 
-    setForgotSuccess(true);
     setLoading(false);
+    onClose(); // Close the login modal
+    navigate("/reset-password"); // Redirect directly to the verification screen
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
