@@ -24,6 +24,57 @@ function ResetPassword() {
       return;
     }
 
+    // Explicitly parse hash fragment (common in implicit grant redirects from Supabase)
+    const hash = window.location.hash;
+    if (hash && hash.includes("access_token=")) {
+      const params = new URLSearchParams(hash.substring(1)); // remove '#'
+      const accessToken = params.get("access_token");
+      const refreshToken = params.get("refresh_token");
+      const expiresIn = params.get("expires_in");
+      const type = params.get("type");
+
+      if (accessToken && (type === "recovery" || hash.includes("type=recovery"))) {
+        setLoading(true);
+        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+        fetch(`${API_URL}/auth/me`, {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${accessToken}`
+          }
+        })
+        .then(async (res) => {
+          const json = await res.json();
+          if (res.ok && json.user) {
+            const expiresAt = Math.floor(Date.now() / 1000) + parseInt(expiresIn || "3600");
+            const session = {
+              access_token: accessToken,
+              refresh_token: refreshToken || "",
+              expires_in: parseInt(expiresIn || "3600"),
+              expires_at: expiresAt,
+              token_type: "bearer",
+              user: json.user
+            };
+            localStorage.setItem("sb-session", JSON.stringify(session));
+            localStorage.setItem("sb-user", JSON.stringify(json.user));
+            
+            // Dispatch custom event to notify any active auth listeners
+            window.dispatchEvent(new Event("storage"));
+            
+            setSessionReady(true);
+            setErrorMessage("");
+          } else {
+            setErrorMessage(json.error || "Failed to retrieve user profile from verification session.");
+          }
+          setLoading(false);
+        })
+        .catch((err) => {
+          setErrorMessage("Network error verifying your session: " + err.message);
+          setLoading(false);
+        });
+        return;
+      }
+    }
+
     if (tokenHash) {
       supabase.auth
         .verifyOtp({
@@ -40,19 +91,20 @@ function ResetPassword() {
           }
         });
     } else {
+      let timer: NodeJS.Timeout | undefined;
       // Check if session is already active (implicit redirect/session from link)
       supabase.auth.getSession().then(({ data: { session } }) => {
         if (session) {
           setSessionReady(true);
         } else {
           // Don't show error immediately, wait a moment for onAuthStateChange to fire if parsing hash
-          setTimeout(() => {
+          timer = setTimeout(() => {
             supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
               if (!currentSession) {
                 setErrorMessage("No active session found. Please click the reset link in your email.");
               }
             });
-          }, 1500);
+          }, 3000); // 3 seconds timeout to give redirect processing ample time
         }
       });
 
@@ -66,6 +118,7 @@ function ResetPassword() {
       });
 
       return () => {
+        if (timer) clearTimeout(timer);
         subscription.unsubscribe();
       };
     }
