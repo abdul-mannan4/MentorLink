@@ -50,7 +50,7 @@ type Props = {
     localStorage.setItem("reset-email-input", email);
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password?email=${encodeURIComponent(email)}`,
+      redirectTo: `${window.location.origin}/reset-password`,
     });
 
     if (error) {
