@@ -277,7 +277,7 @@ function ResetPassword() {
           <>
             <h3>Verify Reset Code</h3>
             <p className={style.message}>
-              Outlook's link scanner may have consumed your link. Please enter your email and the 6-digit code from the email.
+              Outlook's link scanner may have consumed your link. Please enter your email and the verification code from the email.
             </p>
             
             {otpError && (
@@ -288,7 +288,7 @@ function ResetPassword() {
                 {otpError}
               </p>
             )}
-
+ 
             <form onSubmit={handleOtpVerify} className={style.form}>
               <div className={style.inputGroup}>
                 <label className={style.label}>Student Email</label>
@@ -301,16 +301,16 @@ function ResetPassword() {
                   required
                 />
               </div>
-
+ 
               <div className={style.inputGroup}>
-                <label className={style.label}>6-Digit Code</label>
+                <label className={style.label}>Verification Code</label>
                 <input
                   className={style.input}
                   type="text"
-                  placeholder="123456"
+                  placeholder="Enter code"
                   value={tokenInput}
                   onChange={(e) => setTokenInput(e.target.value)}
-                  maxLength={6}
+                  maxLength={10}
                   required
                 />
               </div>
