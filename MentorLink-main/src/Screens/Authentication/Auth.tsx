@@ -46,8 +46,11 @@ type Props = {
       return;
     }
 
+    // Save to local storage for automatic prefill on the same device
+    localStorage.setItem("reset-email-input", email);
+
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
+      redirectTo: `${window.location.origin}/reset-password?email=${encodeURIComponent(email)}`,
     });
 
     if (error) {

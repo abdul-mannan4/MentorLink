@@ -16,7 +16,18 @@ function ResetPassword() {
 
   // Fallback states for manual OTP entry if the magic link expired/got pre-fetched
   const [showOtpVerify, setShowOtpVerify] = useState(false);
-  const [emailInput, setEmailInput] = useState("");
+  const [emailInput, setEmailInput] = useState(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const emailParam = queryParams.get("email");
+    if (emailParam) return decodeURIComponent(emailParam);
+
+    const hash = window.location.hash;
+    const hashParams = new URLSearchParams(hash.substring(1));
+    const emailHashParam = hashParams.get("email");
+    if (emailHashParam) return decodeURIComponent(emailHashParam);
+
+    return localStorage.getItem("reset-email-input") || "";
+  });
   const [tokenInput, setTokenInput] = useState("");
   const [otpError, setOtpError] = useState("");
 
@@ -26,6 +37,11 @@ function ResetPassword() {
     const error = queryParams.get("error");
     const hash = window.location.hash;
     const hashParams = new URLSearchParams(hash.substring(1));
+
+    const emailParam = queryParams.get("email") || hashParams.get("email");
+    if (emailParam) {
+      setEmailInput(decodeURIComponent(emailParam));
+    }
 
     const errorCode = queryParams.get("error_code") || hashParams.get("error_code");
     const errorDesc = queryParams.get("error_description") || hashParams.get("error_description") || queryParams.get("error_description");
