@@ -9,7 +9,7 @@ import { Eye, EyeOff, X } from "lucide-react";
 
 type Props = {
   onClose: () => void;
-};function Auth({ onClose }: Props) {
+}; function Auth({ onClose }: Props) {
   const [view, setView] = useState<"auth" | "forgot">("auth");
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
@@ -128,7 +128,7 @@ type Props = {
             <X size={16} />
           </button>
         </div>
-        
+
         {view === "forgot" ? (
           <>
             <h2 className={style.title}>Reset Password</h2>
@@ -210,15 +210,15 @@ type Props = {
           <>
             <h2 className={style.title}>MentorLink</h2>
             <p className={style.subtitle}>
-              {isSignUp 
-                ? "Create your student account to connect with mentors." 
+              {isSignUp
+                ? "Create your student account to connect with mentors."
                 : "Sign in to your student account to connect with mentors."}
             </p>
 
             {/* Tab Switcher */}
             <div className={style.tabContainer}>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className={`${style.tab} ${!isSignUp ? style.activeTab : style.inactiveTab}`}
                 onClick={() => {
                   setIsSignUp(false);
@@ -227,8 +227,8 @@ type Props = {
               >
                 Sign In
               </button>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className={`${style.tab} ${isSignUp ? style.activeTab : style.inactiveTab}`}
                 onClick={() => {
                   setIsSignUp(true);
