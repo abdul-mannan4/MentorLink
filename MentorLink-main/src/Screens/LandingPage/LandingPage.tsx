@@ -110,7 +110,7 @@ const MentorRowCard = ({ mentor, onConnect }: { mentor: MentorData; onConnect: (
 };
 
 const LandingPage = () => {
-  const projectName = "NTUCONNECT";
+  const projectName = "NTUConnect";
   const userNumber = "3,500";
   const navigate = useNavigate();
   useScrollReveal();
