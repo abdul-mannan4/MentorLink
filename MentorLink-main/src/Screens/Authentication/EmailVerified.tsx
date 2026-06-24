@@ -15,32 +15,39 @@ function ConfirmEmail() {
 
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
+    const hash = window.location.hash.substring(1);
+    const hashParams = new URLSearchParams(hash);
+
     const tokenHash = queryParams.get("token_hash");
     const type = queryParams.get("type") || "signup";
-    const error = queryParams.get("error");
+    
+    // Check both query params and hash for errors
+    const error = queryParams.get("error") || hashParams.get("error");
+    const errorDescription = queryParams.get("error_description") || hashParams.get("error_description") || queryParams.get("error_msg");
+
+    const accessToken = hashParams.get("access_token") || queryParams.get("access_token");
+    const refreshToken = hashParams.get("refresh_token") || queryParams.get("refresh_token");
 
     if (error) {
-      setErrorMessage("Verification link expired or already used. Please request a new one.");
+      console.error("Verification error:", error, errorDescription);
+      setErrorMessage(
+        errorDescription || "Verification link expired or already used. Please request a new one."
+      );
       return;
     }
 
-    if (tokenHash) {
-      // Use the REAL Supabase JS client (realtimeSupabase) so verifyOtp talks
-      // directly to Supabase Auth REST — this works with the anon key and
-      // correctly sets the session in the real Supabase client storage.
+    if (accessToken) {
+      // Standard redirect: Supabase Auth redirect returns user session in the URL hash
+      console.log("Setting session from URL hash...");
       realtimeSupabase.auth
-        .verifyOtp({
-          token_hash: tokenHash,
-          type: type as "signup" | "recovery" | "email_change",
+        .setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken || "",
         })
-        .then(({ data, error: verifyError }) => {
-          if (verifyError) {
-            console.error("verifyOtp error:", verifyError.message);
-            setErrorMessage(
-              verifyError.message.includes("expired") || verifyError.message.includes("invalid")
-                ? "Verification link expired or already used. Please request a new one."
-                : verifyError.message
-            );
+        .then(({ data, error: setSessionError }) => {
+          if (setSessionError) {
+            console.error("setSession error:", setSessionError.message);
+            setErrorMessage(setSessionError.message);
             return;
           }
           if (data?.session) {
@@ -57,8 +64,39 @@ function ConfirmEmail() {
             }));
             setSessionReady(true);
           } else {
-            // Token was valid but no session (e.g., link already used once — session was set)
-            // Check if we already have a session from this verification
+            setErrorMessage("Verification complete but no session was created. Try signing in.");
+          }
+        });
+    } else if (tokenHash) {
+      // Direct token_hash verification
+      console.log("Verifying token_hash OTP...");
+      realtimeSupabase.auth
+        .verifyOtp({
+          token_hash: tokenHash,
+          type: type as "signup" | "recovery" | "email_change",
+        })
+        .then(({ data, error: verifyError }) => {
+          if (verifyError) {
+            console.error("verifyOtp error:", verifyError.message);
+            setErrorMessage(
+              verifyError.message.includes("expired") || verifyError.message.includes("invalid")
+                ? "Verification link expired or already used. Please request a new one."
+                : verifyError.message
+            );
+            return;
+          }
+          if (data?.session) {
+            localStorage.setItem("sb-session", JSON.stringify(data.session));
+            if (data.session.user) {
+              localStorage.setItem("sb-user", JSON.stringify(data.session.user));
+            }
+            window.dispatchEvent(new StorageEvent("storage", {
+              key: "sb-session",
+              newValue: JSON.stringify(data.session),
+              storageArea: localStorage,
+            }));
+            setSessionReady(true);
+          } else {
             const existing = localStorage.getItem("sb-session");
             if (existing) {
               setSessionReady(true);
@@ -68,7 +106,7 @@ function ConfirmEmail() {
           }
         });
     } else {
-      // No token_hash — check if already verified (user opened this URL manually or returned)
+      // Fallback: check if we already have an active session
       const existing = localStorage.getItem("sb-session");
       if (existing) {
         try {

@@ -15,49 +15,98 @@ function ConfirmEmail() {
 
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
+    const hash = window.location.hash.substring(1);
+    const hashParams = new URLSearchParams(hash);
+
     const tokenHash = queryParams.get("token_hash");
     const type = queryParams.get("type") || "signup";
-    const error = queryParams.get("error");
+    
+    // Check both query params and hash for errors
+    const error = queryParams.get("error") || hashParams.get("error");
+    const errorDescription = queryParams.get("error_description") || hashParams.get("error_description") || queryParams.get("error_msg");
+
+    const accessToken = hashParams.get("access_token") || queryParams.get("access_token");
+    const refreshToken = hashParams.get("refresh_token") || queryParams.get("refresh_token");
 
     if (error) {
-      setErrorMessage("Verification link expired or already used. Please request a new one.");
+      console.error("Verification error:", error, errorDescription);
+      setErrorMessage(
+        errorDescription || "Verification link expired or already used. Please request a new one."
+      );
       return;
     }
 
-    if (tokenHash) {
-      realtimeSupabase.auth.verifyOtp({
-        token_hash: tokenHash,
-        type: type as "signup" | "recovery" | "email_change",
-      }).then(({ data, error: verifyError }) => {
-        if (verifyError) {
-          setErrorMessage(
-            verifyError.message.includes("expired") || verifyError.message.includes("invalid")
-              ? "Verification link expired or already used. Please request a new one."
-              : verifyError.message
-          );
-          return;
-        }
-        if (data?.session) {
-          localStorage.setItem("sb-session", JSON.stringify(data.session));
-          if (data.session.user) {
-            localStorage.setItem("sb-user", JSON.stringify(data.session.user));
+    if (accessToken) {
+      // Standard redirect: Supabase Auth redirect returns user session in the URL hash
+      console.log("Setting session from URL hash...");
+      realtimeSupabase.auth
+        .setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken || "",
+        })
+        .then(({ data, error: setSessionError }) => {
+          if (setSessionError) {
+            console.error("setSession error:", setSessionError.message);
+            setErrorMessage(setSessionError.message);
+            return;
           }
-          window.dispatchEvent(new StorageEvent("storage", {
-            key: "sb-session",
-            newValue: JSON.stringify(data.session),
-            storageArea: localStorage,
-          }));
-          setSessionReady(true);
-        } else {
-          const existing = localStorage.getItem("sb-session");
-          if (existing) {
+          if (data?.session) {
+            // Persist session in localStorage so our custom supabase-client picks it up
+            localStorage.setItem("sb-session", JSON.stringify(data.session));
+            if (data.session.user) {
+              localStorage.setItem("sb-user", JSON.stringify(data.session.user));
+            }
+            // Notify any other tabs that verification happened
+            window.dispatchEvent(new StorageEvent("storage", {
+              key: "sb-session",
+              newValue: JSON.stringify(data.session),
+              storageArea: localStorage,
+            }));
             setSessionReady(true);
           } else {
             setErrorMessage("Verification complete but no session was created. Try signing in.");
           }
-        }
-      });
+        });
+    } else if (tokenHash) {
+      // Direct token_hash verification
+      console.log("Verifying token_hash OTP...");
+      realtimeSupabase.auth
+        .verifyOtp({
+          token_hash: tokenHash,
+          type: type as "signup" | "recovery" | "email_change",
+        })
+        .then(({ data, error: verifyError }) => {
+          if (verifyError) {
+            console.error("verifyOtp error:", verifyError.message);
+            setErrorMessage(
+              verifyError.message.includes("expired") || verifyError.message.includes("invalid")
+                ? "Verification link expired or already used. Please request a new one."
+                : verifyError.message
+            );
+            return;
+          }
+          if (data?.session) {
+            localStorage.setItem("sb-session", JSON.stringify(data.session));
+            if (data.session.user) {
+              localStorage.setItem("sb-user", JSON.stringify(data.session.user));
+            }
+            window.dispatchEvent(new StorageEvent("storage", {
+              key: "sb-session",
+              newValue: JSON.stringify(data.session),
+              storageArea: localStorage,
+            }));
+            setSessionReady(true);
+          } else {
+            const existing = localStorage.getItem("sb-session");
+            if (existing) {
+              setSessionReady(true);
+            } else {
+              setErrorMessage("Verification complete but no session was created. Try signing in.");
+            }
+          }
+        });
     } else {
+      // Fallback: check if we already have an active session
       const existing = localStorage.getItem("sb-session");
       if (existing) {
         try {
@@ -66,7 +115,9 @@ function ConfirmEmail() {
             setSessionReady(true);
             return;
           }
-        } catch { /* ignore */ }
+        } catch {
+          // ignore
+        }
       }
       setErrorMessage("No verification token found. Please click the link in your email.");
     }

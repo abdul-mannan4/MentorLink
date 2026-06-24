@@ -400,7 +400,8 @@ export const supabase = {
           },
           body: JSON.stringify({
             type: params.type,
-            email: params.email
+            email: params.email,
+            redirectTo: params.options?.emailRedirectTo
           })
         });
 
