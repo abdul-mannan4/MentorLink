@@ -229,7 +229,7 @@ const LandingPage = () => {
           <div className={style.logo} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <img src={logoIcon} className={style.logoImg} alt="NTUConnect Logo" />
             <span className={style.logoName}>
-              {/* {projectName[0]} */}
+              {projectName[0]}
               <span className={style["logo-text-rest"]}>
                 {projectName.slice(1)}
               </span>
