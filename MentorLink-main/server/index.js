@@ -110,14 +110,18 @@ app.post("/api/auth/signup", async (req, res) => {
   }
 
   try {
-    // Pre-emptively check if the email already exists using our custom RPC function
-    // (with a warning fallback if the function hasn't been created in Supabase SQL editor yet)
-    const { data: exists, error: checkError } = await supabase
+    // Step 1: Check if a CONFIRMED account already exists for this email.
+    // The updated check_email_exists function only returns true for confirmed users.
+    // If the function is missing (PGRST202), we skip this check and rely on signUp.
+    const { data: isConfirmed, error: checkError } = await supabase
       .rpc("check_email_exists", { email_to_check: email });
 
-    if (!checkError && exists === true) {
+    if (!checkError && isConfirmed === true) {
+      // Email belongs to a fully confirmed account — block signup
       return res.status(400).json({ error: "Email already registered. Please sign in." });
-    } else if (checkError) {
+    }
+
+    if (checkError) {
       if (checkError.code === "PGRST202" || (checkError.message && checkError.message.includes("Could not find the function"))) {
         console.warn("\n========================================================================\n" +
                      "⚠️  WARNING: Duplicate email check on signup is currently DISABLED!\n" +
@@ -129,6 +133,10 @@ app.post("/api/auth/signup", async (req, res) => {
       }
     }
 
+    // Step 2: Call signUp. For new users this creates the account + sends email.
+    // For unconfirmed users Supabase re-sends the verification email silently and returns { user: null }.
+    // For confirmed users it also returns { user: null } (user enumeration protection) BUT
+    // check_email_exists would have already caught those above.
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -141,14 +149,19 @@ app.post("/api/auth/signup", async (req, res) => {
       return res.status(400).json({ error: error.message });
     }
 
-    if (!data?.user || (data.user.identities && data.user.identities.length === 0)) {
-      // If the user exists but is not verified, allow it and return success
-      if (data?.user && !data.user.email_confirmed_at) {
-        return res.json({ data });
-      }
-      return res.status(400).json({ error: "Email already registered. Please sign in." });
+    // If user is null: either an unconfirmed user re-signup (email re-sent) or a race condition.
+    // Since check_email_exists confirmed it's NOT a confirmed account, treat this as success.
+    if (!data?.user) {
+      console.log(`Signup for ${email}: user null returned (likely unconfirmed re-signup), treating as success`);
+      return res.json({
+        data: {
+          user: { email, email_confirmed_at: null, identities: [] },
+          session: null
+        }
+      });
     }
 
+    // New user successfully created
     return res.json({ data });
   } catch (err) {
     console.error("Signup error:", err);
