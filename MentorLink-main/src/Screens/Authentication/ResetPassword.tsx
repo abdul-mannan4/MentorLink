@@ -192,34 +192,79 @@ function ResetPassword() {
     setOtpError("");
     setLoading(true);
 
-    if (!emailInput || !tokenInput) {
-      setOtpError("Email and 6-digit code are required.");
+    const trimmedToken = tokenInput.trim();
+    const trimmedEmail = emailInput.trim();
+
+    if (!trimmedToken) {
+      setOtpError("Verification code or token is required.");
       setLoading(false);
       return;
     }
 
-    const { data, error } = await supabase.auth.verifyOtp({
-      email: emailInput.trim(),
-      token: tokenInput.trim(),
-      type: "recovery",
-    });
+    let session = null;
+    let errorMsg = "";
 
-    if (error) {
-      setOtpError(error.message);
-      setLoading(false);
-      return;
+    // 1. If it looks like a long token hash or code (more than 10 characters)
+    if (trimmedToken.length > 10) {
+      // First try to exchange it as a PKCE code
+      try {
+        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+        const res = await fetch(`${API_URL}/auth/exchange-code`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ code: trimmedToken })
+        });
+        const json = await res.json();
+        if (res.ok && json.data?.session) {
+          session = json.data.session;
+        }
+      } catch (err) {
+        console.log("PKCE code exchange check failed, will try token_hash next:", err);
+      }
+
+      // If PKCE exchange didn't yield a session, try verifying as a token_hash
+      if (!session) {
+        const { data, error } = await supabase.auth.verifyOtp({
+          token_hash: trimmedToken,
+          type: "recovery",
+        });
+        if (data?.session) {
+          session = data.session;
+        } else if (error) {
+          errorMsg = error.message;
+        }
+      }
+    } else {
+      // 2. Otherwise, treat it as a standard 6-digit numeric OTP code
+      if (!trimmedEmail) {
+        setOtpError("Email is required for 6-digit code verification.");
+        setLoading(false);
+        return;
+      }
+      const { data, error } = await supabase.auth.verifyOtp({
+        email: trimmedEmail,
+        token: trimmedToken,
+        type: "recovery",
+      });
+      if (data?.session) {
+        session = data.session;
+      } else if (error) {
+        errorMsg = error.message;
+      }
     }
 
-    if (data.session) {
-      localStorage.setItem("sb-session", JSON.stringify(data.session));
-      localStorage.setItem("sb-user", JSON.stringify(data.session.user));
+    if (session) {
+      localStorage.setItem("sb-session", JSON.stringify(session));
+      localStorage.setItem("sb-user", JSON.stringify(session.user));
       window.dispatchEvent(new Event("storage"));
       
       setSessionReady(true);
       setShowOtpVerify(false);
       setOtpError("");
     } else {
-      setOtpError("Failed to authenticate verification session. Please try requesting a new link.");
+      setOtpError(errorMsg || "Failed to authenticate verification session. Please try requesting a new link.");
     }
     setLoading(false);
   }
@@ -310,7 +355,7 @@ function ResetPassword() {
                   placeholder="Enter code"
                   value={tokenInput}
                   onChange={(e) => setTokenInput(e.target.value)}
-                  maxLength={10}
+                  maxLength={256}
                   required
                 />
               </div>

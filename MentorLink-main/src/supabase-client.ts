@@ -21,7 +21,17 @@ async function refreshSessionIfNeeded(): Promise<string> {
     const now = Math.floor(Date.now() / 1000);
     // If token expires in less than 5 minutes (300 seconds), refresh it
     if (expiresAt && (expiresAt - now < 300)) {
-      if (!session.refresh_token) return session.access_token;
+      if (!session.refresh_token) {
+        // If it's fully expired and we have no refresh token, clear session
+        if (expiresAt - now < 0) {
+          localStorage.removeItem("sb-session");
+          localStorage.removeItem("sb-user");
+          clearCache();
+          triggerAuthChange("SIGNED_OUT", null);
+          return "";
+        }
+        return session.access_token;
+      }
       
       console.log("Token is close to expiry or expired, refreshing...");
       const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`, {
@@ -48,6 +58,11 @@ async function refreshSessionIfNeeded(): Promise<string> {
         }
       } else {
         console.error("Failed to refresh token", await res.text());
+        localStorage.removeItem("sb-session");
+        localStorage.removeItem("sb-user");
+        clearCache();
+        triggerAuthChange("SIGNED_OUT", null);
+        return "";
       }
     }
     return session.access_token;
@@ -288,6 +303,11 @@ export const supabase = {
     },
 
     async getUser() {
+      const token = await refreshSessionIfNeeded();
+      if (!token) {
+        return { data: { user: null }, error: { message: "No active session" } };
+      }
+
       // Return cached user or fetch from backend
       const userStr = localStorage.getItem("sb-user");
       if (userStr) {
@@ -296,11 +316,6 @@ export const supabase = {
         } catch {
           // ignore
         }
-      }
-
-      const token = await refreshSessionIfNeeded();
-      if (!token) {
-        return { data: { user: null }, error: { message: "No active session" } };
       }
 
       try {
