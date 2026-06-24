@@ -455,7 +455,7 @@ export default function ChatWidget() {
               <div className={styles.directory}>
                 <div className={styles.panelHeader} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
-                    <h3>MentorLink Chats</h3>
+                    <h3>NTUConnect Chats</h3>
                     <p>Exchange questions & advice</p>
                   </div>
                   <button className={`${styles.backBtn} ${styles.closeBtn}`} onClick={() => setIsOpen(false)} aria-label="Close widget">

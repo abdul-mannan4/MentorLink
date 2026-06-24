@@ -223,7 +223,7 @@ type Props = {
           </>
         ) : (
           <>
-            <h2 className={style.title}>MentorLink</h2>
+            <h2 className={style.title}>NTUConnect</h2>
             <p className={style.subtitle}>
               {isSignUp 
                 ? "Create your student account to connect with mentors." 

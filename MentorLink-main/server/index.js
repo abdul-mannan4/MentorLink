@@ -39,7 +39,7 @@ if (supabaseUrl && supabaseKey) {
 app.get("/", (req, res) => {
   res.json({
     status: "online",
-    message: "MentorLink API is running!",
+    message: "NTUConnect API is running!",
     databaseConfigured: !!supabase
   });
 });

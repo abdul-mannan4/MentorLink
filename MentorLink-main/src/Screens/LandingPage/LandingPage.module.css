@@ -472,7 +472,7 @@
 @media (max-width: 768px) {
   /* 1. Shrink Logo Name */
   .logo-text-rest {
-    display: none; /* Only 'M' will remain visible */
+    display: none; /* Only 'N' will remain visible */
   }
 
   /* 3. Shrink Auth Buttons */

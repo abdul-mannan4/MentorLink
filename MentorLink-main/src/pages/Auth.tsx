@@ -88,7 +88,7 @@ function Auth({onClose}:Props) {
             <div className={style.closeBtn}>
             <button onClick={onClose}>X</button>
           </div>
-            <h2>MentorLink</h2>
+            <h2>NTUConnect</h2>
 
             <form onSubmit={handleSubmit}>
               <div className={style.inputForm}>

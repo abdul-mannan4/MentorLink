@@ -48,7 +48,7 @@ function ConfirmEmail() {
   return (
     <div className={style.verifyContainer}>
       <div className={style.verifyCard}>
-        <h2 className={style.brand}>MentorLink</h2>
+        <h2 className={style.brand}>NTUConnect</h2>
         <h3>Verify your email address</h3>
         <p className={style.message}>
           We've sent a verification link to your Outlook Email. Please check

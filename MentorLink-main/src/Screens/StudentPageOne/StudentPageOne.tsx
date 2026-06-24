@@ -126,7 +126,7 @@ const MentorSuggestionRow = ({ mentor, onClick }: MentorSuggestionRowProps) => {
 const StudentPageOne = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const projectName = "MentroLink";
+  const projectName = "NTUConnect";
 
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isMentor, setIsMentor] = useState(false);

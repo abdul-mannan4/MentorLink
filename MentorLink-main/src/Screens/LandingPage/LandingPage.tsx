@@ -110,7 +110,7 @@ const MentorRowCard = ({ mentor, onConnect }: { mentor: MentorData; onConnect: (
 };
 
 const LandingPage = () => {
-  const projectName = "MENTORLINK";
+  const projectName = "NTUCONNECT";
   const userNumber = "3,500";
   const navigate = useNavigate();
   useScrollReveal();
@@ -455,7 +455,7 @@ const LandingPage = () => {
               className={style.featureSectionLine1}
               style={{ fontSize: "0.75rem" }}
             >
-              &copy; {new Date().getFullYear()} Mentorlink. All rights reserved.
+              &copy; {new Date().getFullYear()} NTUConnect. All rights reserved.
             </p> */}
           </div>
 
@@ -464,7 +464,7 @@ const LandingPage = () => {
               className={style.featureSectionLine1}
               style={{ fontSize: "0.75rem" }}
             >
-              &copy; {new Date().getFullYear()} Mentorlink. All rights reserved.
+              &copy; {new Date().getFullYear()} NTUConnect. All rights reserved.
             </p>
             {/* <button className={`${style.buttonSignIn} ${style.footerButton}`}>
               Privacy
@@ -526,18 +526,18 @@ const LandingPage = () => {
                 )}
               </div>
             )}
-            <div className={style.modalBody}>
-              {/* Sign-in required toast */}
-              {connectToast && (
-                <div className={style.connectToast}>
-                  <span className={style.connectToastIcon}>🔒</span>
-                  <div className={style.connectToastContent}>
-                    <strong>Sign in required</strong>
-                    <p>Please sign in to connect with a mentor and start learning.</p>
-                  </div>
-                  <button className={style.connectToastClose} onClick={() => setConnectToast(false)}>✕</button>
+            {/* Sign-in required toast — outside scrollable body so it's always visible */}
+            {connectToast && (
+              <div className={style.connectToast}>
+                <span className={style.connectToastIcon}>🔒</span>
+                <div className={style.connectToastContent}>
+                  <strong>Sign in required</strong>
+                  <p>Please sign in to connect with a mentor and start learning.</p>
                 </div>
-              )}
+                <button className={style.connectToastClose} onClick={() => setConnectToast(false)}>✕</button>
+              </div>
+            )}
+            <div className={style.modalBody}>
 
               {loadingMentors ? (
                 <div className={style.loadingMentors}>

@@ -299,7 +299,7 @@ function ResetPassword() {
   return (
     <div className={style.resetContainer}>
       <div className={style.resetCard}>
-        <h2 className={style.brand}>MentorLink</h2>
+        <h2 className={style.brand}>NTUConnect</h2>
         
         {errorMessage && !showOtpVerify && (
           <div className={style.errorWrapper}>

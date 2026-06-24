@@ -792,7 +792,7 @@ export default function MentorDashboard() {
       <nav className={style['mentor-nav']}>
         <div className={style['mentor-nav-inner']}>
           <Link to="/" className={style['mentor-nav-brand']}>
-            MentorLink Dashboard
+            NTUConnect Dashboard
           </Link>
           <div className={style['mentor-nav-right']}>
             <ModeButton />

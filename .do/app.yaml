@@ -1,7 +1,7 @@
-name: mentorlink
+name: ntuconnect
 region: nyc
 services:
-  - name: mentorlink-backend
+  - name: ntuconnect-backend
     github:
       repo: abdul-mannan4/MentorLink
       branch: main
@@ -23,9 +23,9 @@ services:
         value: "your-supabase-key"
       - key: FRONTEND_URL
         scope: RUN_TIME
-        value: ${mentorlink-frontend.PUBLIC_URL}
+        value: ${ntuconnect-frontend.PUBLIC_URL}
 static_sites:
-  - name: mentorlink-frontend
+  - name: ntuconnect-frontend
     github:
       repo: abdul-mannan4/MentorLink
       branch: main
@@ -50,12 +50,12 @@ static_sites:
 ingress:
   rules:
     - component:
-        name: mentorlink-backend
+        name: ntuconnect-backend
       match:
         path:
           prefix: /api
     - component:
-        name: mentorlink-frontend
+        name: ntuconnect-frontend
       match:
         path:
           prefix: /

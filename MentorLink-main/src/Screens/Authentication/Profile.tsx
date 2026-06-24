@@ -170,7 +170,7 @@ function Profile() {
   return (
     <div className={style.profileContainer}>
       <div className={style.profileCard}>
-        <h2>MentorLink</h2>
+        <h2>NTUConnect</h2>
         <h1>Complete Your Profile</h1>
 
         <form className={style.form} onSubmit={handleSubmit}>
