@@ -148,7 +148,7 @@ const QuestionDetail = () => {
             .select("reply_id")
             .eq("user_id", userId)
             .not("reply_id", "is", null);
-          
+
           if (replyLikes) {
             const lrMap: Record<string, boolean> = {};
             replyLikes.forEach((rl) => {
@@ -165,7 +165,7 @@ const QuestionDetail = () => {
 
   const handleLikeQuestion = async () => {
     if (!currentUserId || !question || hasLikedQuestion) return;
-    
+
     setHasLikedQuestion(true);
     setQuestion({ ...question, likes_count: (question.likes_count || 0) + 1 });
 
@@ -206,7 +206,12 @@ const QuestionDetail = () => {
   };
 
   const handleSubmitReply = async () => {
-    if (!replyText.trim() || !id || !currentUserId || !subjectTestReady) return;
+    // Use direct ID comparison here — isQuestionAuthor is defined later in render
+    // so it would be undefined (falsy) if referenced here
+    const isAuthor = currentUserId === question?.student_id;
+    const canReply = isAuthor || subjectTestReady;
+
+    if (!replyText.trim() || !id || !currentUserId || !canReply) return;
     setIsSubmitting(true);
 
     const newReply = {
@@ -233,17 +238,22 @@ const QuestionDetail = () => {
           sender_id: currentUserId,
           question_id: id,
           reply_id: data.reply_id,
-          type: "new_reply"
+          type: "new_reply",
         });
         if (notifError) {
           console.error("Error creating notification:", notifError.message);
         }
       }
 
-      const profileData = await supabase.from("profile").select("user_name").eq("id", currentUserId).single();
+      const profileData = await supabase
+        .from("profile")
+        .select("user_name")
+        .eq("id", currentUserId)
+        .single();
+
       const addedReply = {
         ...data,
-        mentor_name: profileData.data?.user_name || "Mentor"
+        mentor_name: profileData.data?.user_name || "Mentor",
       };
       setReplies([...replies, addedReply]);
       setReplyText("");
@@ -265,13 +275,17 @@ const QuestionDetail = () => {
       <div className={styles.pageContainer}>
         <div className={styles.contentWrapper}>
           <h2>Question not found</h2>
-          <button className={styles.backBtn} onClick={() => navigate(-1)}>Go Back</button>
+          <button className={styles.backBtn} onClick={() => navigate(-1)}>
+            Go Back
+          </button>
         </div>
       </div>
     );
   }
 
+  // These are safe to declare here in the render section
   const isQuestionAuthor = currentUserId === question.student_id;
+  const hasMentorReplied = replies.some((r) => r.mentor_id !== question.student_id);
 
   return (
     <div className={styles.pageContainer}>
@@ -284,13 +298,22 @@ const QuestionDetail = () => {
           <span className={styles.subjectBadge}>{question.subject}</span>
           <h1 className={styles.topic}>{question.topic}</h1>
           <p className={styles.description}>{question.description}</p>
-          
+
           {question.file_upload && (
             <div className={styles.attachmentSection}>
               {isImage(question.file_upload) ? (
-                <img src={question.file_upload} alt="Attachment" className={styles.attachmentImage} />
+                <img
+                  src={question.file_upload}
+                  alt="Attachment"
+                  className={styles.attachmentImage}
+                />
               ) : (
-                <a href={question.file_upload} target="_blank" rel="noreferrer" style={{color: '#10b981'}}>
+                <a
+                  href={question.file_upload}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: "#10b981" }}
+                >
                   View Attachment Document
                 </a>
               )}
@@ -301,20 +324,37 @@ const QuestionDetail = () => {
             <div className={styles.teacherInfo}>
               <div className={styles.avatar}>{question.teacher_name.charAt(0)}</div>
               <div>
-                <span style={{ display: "block", fontWeight: 600, color: "var(--text-heading)" }}>
+                <span
+                  style={{
+                    display: "block",
+                    fontWeight: 600,
+                    color: "var(--text-heading)",
+                  }}
+                >
                   {question.teacher_name}
                 </span>
                 <span>{formatDate(question.uploaded_at)}</span>
               </div>
             </div>
-            
+
             <div className={styles.actions}>
-              <button 
+              <button
                 className={`${styles.actionBtn} ${hasLikedQuestion ? styles.liked : ""}`}
                 onClick={handleLikeQuestion}
               >
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                <svg
+                  width="20"
+                  height="20"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"
+                  />
                 </svg>
                 {question.likes_count || 0}
               </button>
@@ -325,28 +365,48 @@ const QuestionDetail = () => {
         {/* REPLIES SECTION */}
         <div className={styles.repliesSection}>
           <h2 className={styles.repliesHeader}>Replies ({replies.length})</h2>
-          
+
           {replies.map((reply) => (
             <div key={reply.reply_id} className={styles.replyCard}>
               <div className={styles.replyMeta}>
-                <div className={styles.avatar} style={{ width: 24, height: 24, fontSize: '0.8rem' }}>
+                <div
+                  className={styles.avatar}
+                  style={{ width: 24, height: 24, fontSize: "0.8rem" }}
+                >
                   {reply.mentor_name?.charAt(0) || "M"}
                 </div>
                 <div>
                   <span className={styles.replyAuthor}>{reply.mentor_name}</span>
-                  <span className={styles.replyDate}> &bull; {formatDate(reply.replied_at)}</span>
+                  <span className={styles.replyDate}>
+                    {" "}
+                    &bull; {formatDate(reply.replied_at)}
+                  </span>
                 </div>
               </div>
               <p className={styles.replyText}>{reply.description}</p>
-              
+
               <div className={styles.actions} style={{ marginTop: 8 }}>
-                <button 
-                  className={`${styles.actionBtn} ${likedReplies[reply.reply_id] ? styles.liked : ""}`}
-                  style={{ padding: '4px 8px', fontSize: '0.85rem' }}
-                  onClick={() => handleLikeReply(reply.reply_id, reply.likes_count || 0)}
+                <button
+                  className={`${styles.actionBtn} ${likedReplies[reply.reply_id] ? styles.liked : ""
+                    }`}
+                  style={{ padding: "4px 8px", fontSize: "0.85rem" }}
+                  onClick={() =>
+                    handleLikeReply(reply.reply_id, reply.likes_count || 0)
+                  }
                 >
-                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"
+                    />
                   </svg>
                   {reply.likes_count || 0}
                 </button>
@@ -354,29 +414,61 @@ const QuestionDetail = () => {
             </div>
           ))}
 
-          {isQuestionAuthor || isMentor ? (
+          {/* 
+            REPLY FORM LOGIC:
+            - Question author: can reply as long as at least one mentor has replied
+            - Mentor: can reply only if they passed the subject test (score >= 50%)
+            - Others: cannot reply at all
+          */}
+          {isQuestionAuthor && hasMentorReplied ? (
+            <div className={styles.replyForm}>
+              <textarea
+                className={styles.replyInput}
+                placeholder="Reply to your question or follow up..."
+                value={replyText}
+                onChange={(e) => setReplyText(e.target.value)}
+              />
+              <button
+                className={styles.submitReplyBtn}
+                onClick={handleSubmitReply}
+                disabled={isSubmitting || !replyText.trim()}
+              >
+                {isSubmitting ? "Posting..." : "Post Reply"}
+              </button>
+            </div>
+          ) : isQuestionAuthor && !hasMentorReplied ? (
+            <p style={{ color: "#888", fontStyle: "italic" }}>
+              Waiting for a mentor to reply first...
+            </p>
+          ) : isMentor ? (
             <>
-              {!isQuestionAuthor && (!subjectTestReady || mentorSubjectScore === null || (mentorSubjectScore / 15) * 100 < 50) ? (
+              {!subjectTestReady ||
+                mentorSubjectScore === null ||
+                (mentorSubjectScore / 15) * 100 < 50 ? (
                 <div className={styles.replyNotice}>
                   <p>
-                    You must complete the expert subject test for <strong>{question.subject}</strong> and score at least 50% before replying.
+                    You must complete the expert subject test for{" "}
+                    <strong>{question.subject}</strong> and score at least 50%
+                    before replying.
                   </p>
-                  <p style={{ marginTop: 8, color: '#e2e8f0' }}>
+                  <p style={{ marginTop: 8, color: "#e2e8f0" }}>
                     {mentorSubjectScore !== null
-                      ? `Current subject score: ${mentorSubjectScore} / 15 (${Math.round((mentorSubjectScore / 15) * 100)}%)`
-                      : 'No subject test completed yet.'}
+                      ? `Current subject score: ${mentorSubjectScore} / 15 (${Math.round(
+                        (mentorSubjectScore / 15) * 100
+                      )}%)`
+                      : "No subject test completed yet."}
                   </p>
                 </div>
               ) : (
                 <div className={styles.replyForm}>
-                  <textarea 
+                  <textarea
                     className={styles.replyInput}
-                    placeholder={isQuestionAuthor ? "Reply to your question or follow up..." : "Write your answer..."}
+                    placeholder="Write your answer..."
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
                   />
-                  <button 
-                    className={styles.submitReplyBtn} 
+                  <button
+                    className={styles.submitReplyBtn}
                     onClick={handleSubmitReply}
                     disabled={isSubmitting || !replyText.trim()}
                   >
@@ -386,8 +478,11 @@ const QuestionDetail = () => {
               )}
             </>
           ) : null}
+
           {!isMentor && !isQuestionAuthor && replies.length === 0 && (
-             <p style={{ color: '#888', fontStyle: 'italic' }}>No mentors have replied yet.</p>
+            <p style={{ color: "#888", fontStyle: "italic" }}>
+              No mentors have replied yet.
+            </p>
           )}
         </div>
       </div>
@@ -396,13 +491,30 @@ const QuestionDetail = () => {
         <div className={styles.modalOverlay}>
           <div className={styles.successCard}>
             <div className={styles.successIconContainer}>
-              <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" className={styles.successIcon}>
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+              <svg
+                width="48"
+                height="48"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className={styles.successIcon}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={3}
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
             </div>
             <h3 className={styles.successTitle}>Response Posted!</h3>
-            <p className={styles.successMessage}>Your answer has been submitted successfully.</p>
-            <button className={styles.successCloseBtn} onClick={() => setShowSuccess(false)}>
+            <p className={styles.successMessage}>
+              Your answer has been submitted successfully.
+            </p>
+            <button
+              className={styles.successCloseBtn}
+              onClick={() => setShowSuccess(false)}
+            >
               Close
             </button>
           </div>
