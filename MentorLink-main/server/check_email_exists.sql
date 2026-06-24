@@ -7,7 +7,9 @@ SECURITY DEFINER -- Bypasses RLS to search auth.users schema
 AS $$
 BEGIN
   RETURN EXISTS (
-    SELECT 1 FROM auth.users WHERE email = email_to_check
+    SELECT 1 FROM auth.users 
+    WHERE email = email_to_check 
+      AND email_confirmed_at IS NOT NULL
   );
 END;
 $$ LANGUAGE plpgsql;

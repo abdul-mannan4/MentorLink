@@ -142,6 +142,10 @@ app.post("/api/auth/signup", async (req, res) => {
     }
 
     if (!data?.user || (data.user.identities && data.user.identities.length === 0)) {
+      // If the user exists but is not verified, allow it and return success
+      if (data?.user && !data.user.email_confirmed_at) {
+        return res.json({ data });
+      }
       return res.status(400).json({ error: "Email already registered. Please sign in." });
     }
 

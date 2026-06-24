@@ -50,10 +50,7 @@ function Auth({onClose}:Props) {
 
       if (!data?.user || data?.user?.identities?.length === 0) {
         if (data?.user && !data.user.email_confirmed_at) {
-          await supabase.auth.resend({
-            type: "signup",
-            email,
-          });
+          // Verification email was already re-sent by Supabase on signUp
           navigate("/email-sent",{
             state:{email}
           })
@@ -62,7 +59,7 @@ function Auth({onClose}:Props) {
           setLoading(false);
           return;
         }
-        setErrorMessage("Email already registered.Please sign in.");
+        setErrorMessage("Email already registered. Please sign in.");
         setLoading(false);
         return;
       }

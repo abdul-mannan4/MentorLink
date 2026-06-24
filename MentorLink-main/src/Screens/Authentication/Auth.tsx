@@ -94,12 +94,8 @@ type Props = {
       }
 
       if (!data?.user || data?.user?.identities?.length === 0) {
-        // If unconfirmed, automatically resend the confirmation email and redirect
+        // If unconfirmed, redirect to email-sent (verification email is sent automatically by signUp)
         if (data?.user && !data.user.email_confirmed_at) {
-          await supabase.auth.resend({
-            type: "signup",
-            email,
-          });
           navigate("/email-sent", {
             state: { email },
           });
