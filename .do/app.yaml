@@ -43,19 +43,19 @@ static_sites:
         value: "your-supabase-anon-key"
       - key: VITE_API_URL
         scope: BUILD_TIME
-        value: ${mentorlink-backend.PUBLIC_URL}/api
+        value: "https://ntuconnect.me/api"
       - key: VITE_GROQ_API_KEY
         scope: BUILD_TIME
         value: "your-groq-api-key"
 ingress:
   rules:
     - component:
-        name: mentorlink-frontend
-      match:
-        path:
-          prefix: /
-    - component:
         name: mentorlink-backend
       match:
         path:
           prefix: /api
+    - component:
+        name: mentorlink-frontend
+      match:
+        path:
+          prefix: /
