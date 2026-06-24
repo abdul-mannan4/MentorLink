@@ -4,7 +4,7 @@ import { supabase } from "../../supabase-client";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import style from "./EmailVerified.module.css";
-import logoIcon from "../../assets/logo.png";
+import logoIcon from "../../assets/logo.svg";
 
 function ConfirmEmail() {
   const [resendMessage, setResendMessage] = useState("");

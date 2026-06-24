@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabase-client";
 import style from "./EmailVerified.module.css";
-import logoIcon from "../../assets/logo.png";
+import logoIcon from "../../assets/logo.svg";
 
 function ConfirmEmail() {
   const navigate = useNavigate();

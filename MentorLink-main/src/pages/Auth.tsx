@@ -5,7 +5,7 @@ import { supabase } from "../supabase-client";
 
 import type { ChangeEvent } from "react";
 import style from "./Auth.module.css";
-import logoIcon from "../assets/logo.png";
+import logoIcon from "../assets/logo.svg";
 import { Eye, EyeOff } from "lucide-react";
 
 

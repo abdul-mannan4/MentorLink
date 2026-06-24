@@ -10,7 +10,7 @@ import Auth from "../Authentication/Auth";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { supabase } from "../../supabase-client";
 import userIcon from "../../assets/userIcon.svg";
-import logoIcon from "../../assets/logo.png";
+import logoIcon from "../../assets/logo.svg";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
@@ -451,13 +451,27 @@ const LandingPage = () => {
                 </a>
               </span>
             </div>
+          </div>
 
-            {/* <p
-              className={style.featureSectionLine1}
-              style={{ fontSize: "0.75rem" }}
-            >
-              &copy; {new Date().getFullYear()} NTUConnect. All rights reserved.
-            </p> */}
+          <div className={style.footerMiddleSide}>
+            <span className={style.footerSectionTitle}>Developers</span>
+            <div className={style.developerList}>
+              <div className={style.developerItem}>
+                <span className={style.developerName}>Abdul Hannan Ibrahim</span>
+                <span className={style.developerDivider}>|</span>
+                <a href="mailto:hannanibrahim609@gmail.com" className={style.developerEmail}>hannanibrahim609@gmail.com</a>
+              </div>
+              <div className={style.developerItem}>
+                <span className={style.developerName}>Abdul Mannan Ibrahim</span>
+                <span className={style.developerDivider}>|</span>
+                <a href="mailto:mannanibrahim321@gmail.com" className={style.developerEmail}>mannanibrahim321@gmail.com</a>
+              </div>
+              <div className={style.developerItem}>
+                <span className={style.developerName}>Muhammad Hamza</span>
+                <span className={style.developerDivider}>|</span>
+                <a href="mailto:hamzafaiz635@gmail.com" className={style.developerEmail}>hamzafaiz635@gmail.com</a>
+              </div>
+            </div>
           </div>
 
           <div className={style.footerRightSide}>
@@ -467,15 +481,6 @@ const LandingPage = () => {
             >
               &copy; {new Date().getFullYear()} NTUConnect. All rights reserved.
             </p>
-            {/* <button className={`${style.buttonSignIn} ${style.footerButton}`}>
-              Privacy
-            </button>
-            <button className={`${style.buttonSignIn} ${style.footerButton}`}>
-              Terms
-            </button>
-            <button className={`${style.buttonSignIn} ${style.footerButton}`}>
-              Contact
-            </button> */}
           </div>
         </footer>
       </div>

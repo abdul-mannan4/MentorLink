@@ -453,6 +453,50 @@
   justify-content: center;
   align-items: center;
 }
+.footerMiddleSide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 250px;
+}
+.footerSectionTitle {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+}
+.developerList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: center;
+}
+.developerItem {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--text-body);
+}
+.developerName {
+  font-weight: 600;
+  color: var(--text-heading);
+}
+.developerDivider {
+  color: var(--border);
+  font-weight: 300;
+}
+.developerEmail {
+  color: var(--text-muted, #8a8f98);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.developerEmail:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
 .footerButton {
   color: var(--text-body);
   background-color: transparent;

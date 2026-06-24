@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./StudentPageOne.module.css";
 import userIcon from "../../../assets/userIcon.svg";
-import logoIcon from "../../../assets/logo.png";
+import logoIcon from "../../../assets/logo.svg";
 const StudentPageOne = () => {
   const projectName = "NTUConnect";
   const [open, setOpen] = useState(false);

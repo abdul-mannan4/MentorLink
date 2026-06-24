@@ -12,21 +12,23 @@ const supabaseKey = process.env.SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function run() {
-  const email = "23ntucsfl1003@student.ntu.edu.pk";
+  const timestamp = Date.now();
+  const randomNum = Math.floor(1000 + Math.random() * 9000);
+  const email = `23ntucsfl${randomNum}_${timestamp}@student.ntu.edu.pk`;
   const password = "SomePassword123!";
 
   console.log("Supabase URL:", supabaseUrl);
   console.log("Supabase Key starts with:", supabaseKey ? supabaseKey.substring(0, 15) : "none");
+  console.log("Testing with email:", email);
 
-  console.log("Trying to signUp with existing email using server dependencies...");
   try {
-    const { data, error } = await supabase.auth.signUp({
+    const response = await supabase.auth.signUp({
       email,
       password,
     });
 
-    console.log("SignUp response error:", error);
-    console.log("SignUp response data:", JSON.stringify(data, null, 2));
+    console.log("Raw Response Keys:", Object.keys(response));
+    console.log("Raw Response:", JSON.stringify(response, null, 2));
   } catch (err) {
     console.error("Exception during signup:", err);
   }

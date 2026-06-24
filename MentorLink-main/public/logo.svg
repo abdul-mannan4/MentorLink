@@ -1,0 +1,71 @@
+<svg width="800" height="800" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .navy { fill: #0A2A66; }
+      .teal { fill: #14B8B0; }
+      .stroke-navy {
+        stroke: #0A2A66;
+        stroke-width: 12;
+        fill: none;
+        stroke-linecap: round;
+      }
+      .text-ntu {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 110px;
+        font-weight: 700;
+        fill: #0A2A66;
+      }
+      .text-connect {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 70px;
+        font-weight: 500;
+        fill: #14B8B0;
+      }
+    </style>
+  </defs>
+
+  <!-- Outer Arc -->
+  <path d="M220 180 A180 180 0 0 1 580 180" class="stroke-navy"/>
+
+  <!-- Graduation Cap -->
+  <polygon points="400,150 455,175 400,200 345,175" class="navy"/>
+  <polygon points="355,185 400,205 445,185 445,220 400,240 355,220" class="navy"/>
+  <line x1="455" y1="175" x2="455" y2="225" class="stroke-navy"/>
+  <circle cx="455" cy="235" r="6" class="navy"/>
+
+  <!-- Left Person -->
+  <circle cx="300" cy="220" r="25" class="navy"/>
+  <path
+    d="M210 230
+       C180 300, 190 390, 280 430
+       C330 450, 350 420, 340 390
+       C325 350, 290 320, 250 295
+       C230 282, 220 260, 210 230 Z"
+    class="navy"/>
+
+  <!-- Right Person -->
+  <circle cx="500" cy="220" r="25" class="teal"/>
+  <path
+    d="M590 230
+       C620 300, 610 390, 520 430
+       C470 450, 450 420, 460 390
+       C475 350, 510 320, 550 295
+       C570 282, 580 260, 590 230 Z"
+    class="teal"/>
+
+  <!-- Handshake -->
+  <path
+    d="M360 360
+       C380 390, 420 390, 440 360
+       L455 375
+       C430 415, 370 415, 345 375 Z"
+    class="teal"/>
+
+  <!-- NTU Text -->
+  <text x="400" y="580" text-anchor="middle" class="text-ntu">NTU</text>
+
+  <!-- Connect Text -->
+  <text x="400" y="670" text-anchor="middle" class="text-connect">
+    Connect
+  </text>
+</svg>

@@ -5,7 +5,7 @@ import { Bell, ChevronDown, ArrowLeft, X, Search, MessageSquare, Send, MessageCi
 import ModeButton from "../../components/ModeButton/ModeButton";
 import styles from "./StudentPageOne.module.css";
 import userIcon from "../../assets/userIcon.svg";
-import logoIcon from "../../assets/logo.png";
+import logoIcon from "../../assets/logo.svg";
 import searchIcon from "../../assets/searchIcon.svg";
 import { supabase } from "../../supabase-client";
 import { supabaseRealtime, setRealtimeAuth } from "../../supabase-realtime";
