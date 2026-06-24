@@ -44,6 +44,16 @@ app.get("/", (req, res) => {
   });
 });
 
+// DigitalOcean App Platform strips the /api prefix when routing via ingress.
+// This middleware re-adds it so our /api/* routes still match.
+app.use((req, res, next) => {
+  if (!req.path.startsWith("/api") && req.path !== "/") {
+    req.url = "/api" + req.url;
+  }
+  next();
+});
+
+
 // Ensure Supabase is configured before handling any API requests
 app.use("/api", (req, res, next) => {
   if (!supabase) {
