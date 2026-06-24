@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabase-client";
 import style from "./ResetPassword.module.css";
+import logoIcon from "../../assets/logo.png";
 import { Eye, EyeOff } from "lucide-react";
 
 function ResetPassword() {
@@ -299,6 +300,7 @@ function ResetPassword() {
   return (
     <div className={style.resetContainer}>
       <div className={style.resetCard}>
+        <img src={logoIcon} className={style.logoImg} alt="NTUConnect Logo" />
         <h2 className={style.brand}>NTUConnect</h2>
         
         {errorMessage && !showOtpVerify && (

@@ -10,6 +10,7 @@ import Auth from "../Authentication/Auth";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { supabase } from "../../supabase-client";
 import userIcon from "../../assets/userIcon.svg";
+import logoIcon from "../../assets/logo.png";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
@@ -225,8 +226,8 @@ const LandingPage = () => {
         {/* Navbar */}
 
         <nav className={style.LandingNavbar}>
-          <div className={style.logo}>
-            <span className={style.dot}></span>
+          <div className={style.logo} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            <img src={logoIcon} className={style.logoImg} alt="NTUConnect Logo" />
             <span className={style.logoName}>
               {projectName[0]}
               <span className={style["logo-text-rest"]}>
@@ -439,8 +440,8 @@ const LandingPage = () => {
         {/* Footer */}
         <footer className={`${style.footer} hidden`}>
           <div className={style.footerLeftSide}>
-            <div className={style.logo}>
-              <span className={style.dot}></span>
+            <div className={style.logo} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              <img src={logoIcon} className={style.logoImg} alt="NTUConnect Logo" style={{ height: "24px", marginRight: "6px" }} />
               <span className={style.logoName} style={{ fontSize: "0.75rem" }}>
                 <a
                   href="#"

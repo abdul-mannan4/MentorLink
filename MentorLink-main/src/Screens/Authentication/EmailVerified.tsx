@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabase-client";
 import style from "./EmailVerified.module.css";
+import logoIcon from "../../assets/logo.png";
 
 function ConfirmEmail() {
   const navigate = useNavigate();
@@ -23,19 +24,19 @@ function ConfirmEmail() {
 
     if (tokenHash) {
       supabase.auth
-        .verifyOtp({
-          token_hash: tokenHash,
-          type: "signup",
-        })
-        .then(({ data, error }) => {
-          if (error) {
-            setErrorMessage(error.message);
-            return;
-          }
-          if (data.session) {
-            setSessionReady(true);
-          }
-        });
+          .verifyOtp({
+            token_hash: tokenHash,
+            type: "signup",
+          })
+          .then(({ data, error }) => {
+            if (error) {
+              setErrorMessage(error.message);
+              return;
+            }
+            if (data.session) {
+              setSessionReady(true);
+            }
+          });
     } else {
       // No token_hash. Let's check if they are already signed in.
       supabase.auth.getSession().then(({ data: { session } }) => {
@@ -57,15 +58,16 @@ function ConfirmEmail() {
           subscription.unsubscribe();
         }
       });
-      
+
       return () => subscription.unsubscribe();
     }
   }, []);
 
   return (
-    <div className={style.verifyContainer}>
-      <div className={style.verifyCard}>
-        <h2 className={style.brand}>NTUConnect</h2>
+      <div className={style.verifyContainer}>
+        <div className={style.verifyCard}>
+          <img src={logoIcon} className={style.logoImg} alt="NTUConnect Logo" />
+          <h2 className={style.brand}>NTUConnect</h2>
         
         {!errorMessage ? (
           <>

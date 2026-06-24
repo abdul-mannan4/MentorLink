@@ -4,6 +4,7 @@ import { supabase } from "../supabase-client";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import style from "./EmailVerified.module.css";
+import logoIcon from "../assets/logo.png";
 
 function ConfirmEmail() {
   const [resendMessage, setResendMessage] = useState("");
@@ -48,6 +49,7 @@ useEffect(() => {
   return (
     <div className={style.verifyContainer}>
       <div className={style.verifyCard}>
+        <img src={logoIcon} className={style.logoImg} alt="NTUConnect Logo" />
         <h2 className={style.brand}>NTUConnect</h2>
         <h3>Verify your email address</h3>
         <p className={style.message}>

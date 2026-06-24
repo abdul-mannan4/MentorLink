@@ -5,6 +5,7 @@ import { supabase } from "../../supabase-client";
 
 import type { ChangeEvent } from "react";
 import style from "./Auth.module.css";
+import logoIcon from "../../assets/logo.png";
 import { Eye, EyeOff, X } from "lucide-react";
 
 type Props = {
@@ -93,6 +94,20 @@ type Props = {
       }
 
       if (!data?.user || data?.user?.identities?.length === 0) {
+        // If unconfirmed, automatically resend the confirmation email and redirect
+        if (data?.user && !data.user.email_confirmed_at) {
+          await supabase.auth.resend({
+            type: "signup",
+            email,
+          });
+          navigate("/email-sent", {
+            state: { email },
+          });
+          setEmail("");
+          setPassword("");
+          setLoading(false);
+          return;
+        }
         setErrorMessage("Email already registered. Please sign in.");
         setLoading(false);
         return;
@@ -132,6 +147,7 @@ type Props = {
         
         {view === "forgot" ? (
           <>
+            <img src={logoIcon} className={style.logoImg} alt="NTUConnect Logo" />
             <h2 className={style.title}>Reset Password</h2>
             {!forgotSuccess ? (
               <>
@@ -223,6 +239,7 @@ type Props = {
           </>
         ) : (
           <>
+            <img src={logoIcon} className={style.logoImg} alt="NTUConnect Logo" />
             <h2 className={style.title}>NTUConnect</h2>
             <p className={style.subtitle}>
               {isSignUp 

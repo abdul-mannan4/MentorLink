@@ -23,6 +23,14 @@
 .loginCard h2{
    padding: 0 0.2rem;
    text-align: center;
+   font-weight: 500;
+}
+
+.logoImg {
+  height: 50px;
+  width: auto;
+  margin: 0 auto 0.5rem auto;
+  display: block;
 }
 
 .inputForm{

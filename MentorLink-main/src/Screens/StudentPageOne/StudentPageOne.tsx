@@ -5,6 +5,7 @@ import { Bell, ChevronDown, ArrowLeft, X, Search, MessageSquare, Send, MessageCi
 import ModeButton from "../../components/ModeButton/ModeButton";
 import styles from "./StudentPageOne.module.css";
 import userIcon from "../../assets/userIcon.svg";
+import logoIcon from "../../assets/logo.png";
 import searchIcon from "../../assets/searchIcon.svg";
 import { supabase } from "../../supabase-client";
 import { supabaseRealtime, setRealtimeAuth } from "../../supabase-realtime";
@@ -768,7 +769,7 @@ const StudentPageOne = () => {
       <nav className={styles.LandingNavbar}>
         <div className={styles.leftSide}>
           <div className={styles.logo}>
-            <span className={styles.dot}></span>
+            <img src={logoIcon} className={styles.logoImg} alt="NTUConnect Logo" />
             <span className={styles.logoName}>{projectName[0]}<span className={styles["logo-text-rest"]}>{projectName.slice(1)}</span></span>
           </div>
           <button className={styles.askQuestionButton} onClick={() => setIsFormOpen(true)}>Ask Question</button>

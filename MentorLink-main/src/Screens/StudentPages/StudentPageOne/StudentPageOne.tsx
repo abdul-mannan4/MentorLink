@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styles from "./StudentPageOne.module.css";
 import userIcon from "../../../assets/userIcon.svg";
+import logoIcon from "../../../assets/logo.png";
 const StudentPageOne = () => {
   const projectName = "NTUConnect";
   const [open, setOpen] = useState(false);
@@ -10,7 +11,7 @@ const StudentPageOne = () => {
 
       <nav className={styles.LandingNavbar}>
         <div className={styles.logo}>
-          <span className={styles.dot}></span>
+          <img src={logoIcon} className={styles.logoImg} alt="NTUConnect Logo" />
           <span className={styles.logoName}>
             {projectName[0]}
             <span className={styles["logo-text-rest"]}>

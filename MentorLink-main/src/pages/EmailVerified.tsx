@@ -1,8 +1,8 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabase-client";
 import style from "./EmailVerified.module.css";
+import logoIcon from "../assets/logo.png";
 
 function ConfirmEmail() {
   const navigate = useNavigate();
@@ -52,7 +52,8 @@ function ConfirmEmail() {
   return (
     <div className={style.verifyContainer}>
       <div className={style.verifyCard}>
-                <h2 className={style.brand}>NTUConnect</h2>
+        <img src={logoIcon} className={style.logoImg} alt="NTUConnect Logo" />
+        <h2 className={style.brand}>NTUConnect</h2>
         <div className={style.successWrapper}>
           <svg className={style.circleSvg} viewBox="0 0 52 52">
             {/* Circle */}

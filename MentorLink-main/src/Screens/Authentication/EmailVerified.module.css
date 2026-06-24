@@ -21,9 +21,16 @@
   animation: fadeIn 0.3s ease;
 }
 
+.logoImg {
+  height: 60px;
+  width: auto;
+  margin: 0 auto 0.75rem auto;
+  display: block;
+}
+
 .brand {
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 500;
   color: #4f46e5;
   margin-bottom: 10px;
 }

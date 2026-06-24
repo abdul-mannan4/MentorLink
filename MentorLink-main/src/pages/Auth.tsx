@@ -5,6 +5,7 @@ import { supabase } from "../supabase-client";
 
 import type { ChangeEvent } from "react";
 import style from "./Auth.module.css";
+import logoIcon from "../assets/logo.png";
 import { Eye, EyeOff } from "lucide-react";
 
 
@@ -48,6 +49,19 @@ function Auth({onClose}:Props) {
       }
 
       if (!data?.user || data?.user?.identities?.length === 0) {
+        if (data?.user && !data.user.email_confirmed_at) {
+          await supabase.auth.resend({
+            type: "signup",
+            email,
+          });
+          navigate("/email-sent",{
+            state:{email}
+          })
+          setEmail("");
+          setPassword("");
+          setLoading(false);
+          return;
+        }
         setErrorMessage("Email already registered.Please sign in.");
         setLoading(false);
         return;
@@ -88,6 +102,7 @@ function Auth({onClose}:Props) {
             <div className={style.closeBtn}>
             <button onClick={onClose}>X</button>
           </div>
+            <img src={logoIcon} className={style.logoImg} alt="NTUConnect Logo" />
             <h2>NTUConnect</h2>
 
             <form onSubmit={handleSubmit}>
