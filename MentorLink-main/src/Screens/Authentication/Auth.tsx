@@ -79,7 +79,7 @@ type Props = {
         return;
       }
 
-      const { data, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -93,26 +93,12 @@ type Props = {
         return;
       }
 
-      if (!data?.user || data?.user?.identities?.length === 0) {
-        // If unconfirmed, redirect to email-sent (verification email is sent automatically by signUp)
-        if (data?.user && !data.user.email_confirmed_at) {
-          navigate("/email-sent", {
-            state: { email },
-          });
-          setEmail("");
-          setPassword("");
-          setLoading(false);
-          return;
-        }
-        setErrorMessage("Email already registered. Please sign in.");
-        setLoading(false);
-        return;
-      }
-
-      navigate("/email-sent", {
-        state: { email },
-      });
-
+      // Server returns HTTP 200 for:
+      //   1. Brand new email → account created, verification email sent
+      //   2. Unconfirmed email → verification email re-sent
+      // Server returns HTTP 400 (caught above as `error`) for confirmed accounts.
+      // So any 200 response means: navigate to email-sent.
+      navigate("/email-sent", { state: { email } });
       setEmail("");
       setPassword("");
       setLoading(false);

@@ -33,13 +33,12 @@ function Auth({onClose}:Props) {
     setErrorMessage("");
 
     if (isSignUp) {
-      const { data,error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          
           emailRedirectTo: `${window.location.origin}/email-verified`,
-  },
+        },
       });
 
       if (error) {
@@ -48,27 +47,8 @@ function Auth({onClose}:Props) {
         return;
       }
 
-      if (!data?.user || data?.user?.identities?.length === 0) {
-        if (data?.user && !data.user.email_confirmed_at) {
-          // Verification email was already re-sent by Supabase on signUp
-          navigate("/email-sent",{
-            state:{email}
-          })
-          setEmail("");
-          setPassword("");
-          setLoading(false);
-          return;
-        }
-        setErrorMessage("Email already registered. Please sign in.");
-        setLoading(false);
-        return;
-      }
-
-      navigate("/email-sent",{
-        state:{email}
-      })
-
-
+      // Server returns HTTP 200 for new & unconfirmed emails, 400 for confirmed accounts.
+      navigate("/email-sent", { state: { email } });
       setEmail("");
       setPassword("");
       setLoading(false);
