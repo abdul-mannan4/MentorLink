@@ -229,7 +229,7 @@ const LandingPage = () => {
           <div className={style.logo} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <img src={logoIcon} className={style.logoImg} alt="NTUConnect Logo" />
             <span className={style.logoName}>
-              {projectName[0]}
+              {/* {projectName[0]} */}
               <span className={style["logo-text-rest"]}>
                 {projectName.slice(1)}
               </span>
@@ -286,12 +286,12 @@ const LandingPage = () => {
             <button
               className={style.heroButton1}
               onClick={() => setShowAuth(true)}
-              // onClick={() =>
-              //   navigate("/Auth", {
-              //     // replace: true,
-              //     // state: { isDark: isDark },
-              //   })
-              // }
+            // onClick={() =>
+            //   navigate("/Auth", {
+            //     // replace: true,
+            //     // state: { isDark: isDark },
+            //   })
+            // }
             >
               Get Started
             </button>
@@ -476,7 +476,7 @@ const LandingPage = () => {
           </div>
 
           <div className={style.footerRightSide}>
-             <p
+            <p
               className={style.featureSectionLine1}
               style={{ fontSize: "0.75rem" }}
             >
