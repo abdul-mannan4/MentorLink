@@ -11,7 +11,7 @@
     justify-content: center;
     align-items: stretch;
     color: var(--primary);
-    width: min(100%, 400px);
+    width: min(100%, 365px);
     padding: 0.9rem 0.9rem;
     background-color: var(--bg-surface);
     border-radius: 12px;

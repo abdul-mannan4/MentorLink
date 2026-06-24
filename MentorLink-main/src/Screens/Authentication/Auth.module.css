@@ -21,8 +21,8 @@
   flex-direction: column;
   background-color: var(--bg-surface);
   color: var(--text-heading);
-  width: min(100%, 420px);
-  padding: 2.5rem 2.25rem;
+  width: min(100%, 385px);
+  padding: 2rem 1.75rem;
   border-radius: 2rem;
   border: 1px solid rgba(226, 232, 240, 0.8);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
