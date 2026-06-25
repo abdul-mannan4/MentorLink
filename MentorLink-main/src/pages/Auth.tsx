@@ -24,8 +24,8 @@ function Auth({ onClose }: Props) {
   const navigate = useNavigate();
 
   function isValidStudentEmail(email: string) {
-    // Allows: 23ntucsfl1003 or 23ntuctfl1003 (cs or ct)
-    const regex = /^(2[0-9])ntu(cs|ct)[a-z]*\d{4}@student\.ntu\.edu\.pk$/i;
+    // Accepts: 23ntucsfl1003 or 23ntuctfl1003 (cs or ct, then fl, then exactly 4 digits)
+    const regex = /^(2[0-9])ntu(cs|ct)fl\d{4}@student\.ntu\.edu\.pk$/i;
     return regex.test(email.trim());
   }
 
@@ -105,7 +105,7 @@ function Auth({ onClose }: Props) {
           <div className={style.inputForm}>
             <input
               type="email"
-              placeholder="e.g. 23ntucsfl1002@student.ntu.edu.pk"
+              placeholder="e.g. 23ntu(cs|ct)fl1002@student.ntu.edu.pk"
               value={email}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setEmail(e.target.value)
