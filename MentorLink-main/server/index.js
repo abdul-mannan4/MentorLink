@@ -432,12 +432,48 @@ app.get("/api/mentors/browse", async (req, res) => {
 });
 
 
+// Throttling mechanism for running the database-level chat cleanup
+let lastChatCleanupTime = 0;
+const CHAT_CLEANUP_INTERVAL = 60 * 1000; // 1 minute
+
+async function runChatCleanupIfNeeded(supabaseClient) {
+  const now = Date.now();
+  if (now - lastChatCleanupTime < CHAT_CLEANUP_INTERVAL) {
+    return;
+  }
+  lastChatCleanupTime = now;
+
+  try {
+    const { error } = await supabaseClient.rpc("delete_expired_chats");
+    if (error) {
+      if (error.code === "PGRST202" || (error.message && error.message.includes("Could not find the function"))) {
+        console.warn("\n========================================================================\n" +
+                     "⚠️  WARNING: Automatic chat cleanup is currently DISABLED!\n" +
+                     "Please run the SQL migration in 'server/delete_expired_chats.sql' in your\n" +
+                     "Supabase Dashboard > SQL Editor to enable this feature.\n" +
+                     "========================================================================\n");
+      } else {
+        console.warn("delete_expired_chats RPC error:", error.message);
+      }
+    } else {
+      console.log("Database chat cleanup executed successfully.");
+    }
+  } catch (err) {
+    console.error("Error executing delete_expired_chats RPC:", err.message);
+  }
+}
+
 // ================= DB PROXY ENDPOINT WITH SECURITY POLICIES =================
 app.post("/api/db/query", async (req, res) => {
   const { table, method, columns, options, data, filters, order, limit, single, maybeSingle } = req.body;
 
   if (!table || !method) {
     return res.status(400).json({ error: "Table and method are required" });
+  }
+
+  // Trigger chat cleanup if querying relevant tables (chat, chat_request, message)
+  if (supabase && (table === "chat" || table === "chat_request" || table === "message")) {
+    await runChatCleanupIfNeeded(supabase);
   }
 
   // Determine if this is a public select query on safe tables
