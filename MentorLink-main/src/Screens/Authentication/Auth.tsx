@@ -10,16 +10,18 @@ import { Eye, EyeOff, X } from "lucide-react";
 
 type Props = {
   onClose: () => void;
-}; function Auth({ onClose }: Props) {
-  const [view, setView] = useState<"auth" | "forgot">("auth");
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [forgotSuccess, setForgotSuccess] = useState(false);
+};
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+function Auth({ onClose }: Props) {
+  const [view, setView] = useState<"auth" | "forgot">("auth");
+  const [isSignUp, setIsSignUp] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>((""));
+  const [password, setPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [forgotSuccess, setForgotSuccess] = useState<boolean>(false);
+
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -42,7 +44,7 @@ type Props = {
 
     if (!isValidStudentEmail(email)) {
       setErrorMessage(
-        "Invalid email format. Use: 23ntucsfl1003@student.ntu.edu.pk"
+        "Invalid email format. Use a valid NTU CS or CT email address."
       );
       setLoading(false);
       return;
@@ -62,8 +64,7 @@ type Props = {
     }
 
     setLoading(false);
-    onClose(); // Close the login modal
-    navigate("/reset-password"); // Redirect directly to the verification screen
+    setForgotSuccess(true);
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -74,7 +75,7 @@ type Props = {
     if (isSignUp) {
       if (!isValidStudentEmail(email)) {
         setErrorMessage(
-          "Invalid email format. Use: 23ntucsfl1003@student.ntu.edu.pk"
+          "Invalid email format. Use a valid NTU CS or CT email address."
         );
         setLoading(false);
         return;
@@ -94,11 +95,6 @@ type Props = {
         return;
       }
 
-      // Server returns HTTP 200 for:
-      //   1. Brand new email → account created, verification email sent
-      //   2. Unconfirmed email → verification email re-sent
-      // Server returns HTTP 400 (caught above as `error`) for confirmed accounts.
-      // So any 200 response means: navigate to email-sent.
       navigate("/email-sent", { state: { email } });
       setEmail("");
       setPassword("");
@@ -119,6 +115,7 @@ type Props = {
       setLoading(false);
     }
   }
+
   return (
     <div className={style.overlay}>
       <div className={style.loginCard}>
