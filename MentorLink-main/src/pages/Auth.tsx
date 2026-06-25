@@ -8,12 +8,9 @@ import style from "./Auth.module.css";
 import logoIcon from "../assets/logo.svg";
 import { Eye, EyeOff } from "lucide-react";
 
-
-
 type Props = {
-  onClose: () => void
-}
-
+  onClose: () => void;
+};
 
 function Auth({ onClose }: Props) {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -26,15 +23,31 @@ function Auth({ onClose }: Props) {
 
   const navigate = useNavigate();
 
-
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setErrorMessage("");
 
+    // ✅ REMOVE ALL SPACES (prevents user bypass issues)
+    const cleanEmail = email.replace(/\s/g, "");
+
+    // ✅ NTU EMAIL FORMAT VALIDATION
+    const isValidStudentEmail =
+      /^[0-9]{2}ntu(cs|cet)[a-z]*[0-9]+@student\.ntu\.edu\.pk$/i.test(
+        cleanEmail
+      );
+
+    if (!isValidStudentEmail) {
+      setErrorMessage(
+        "Invalid NTU email format. Example: 23ntucsfl1002@student.ntu.edu.pk"
+      );
+      setLoading(false);
+      return;
+    }
+
     if (isSignUp) {
       const { data, error } = await supabase.auth.signUp({
-        email,
+        email: cleanEmail,
         password,
         options: {
           emailRedirectTo: `${window.location.origin}/email-verified`,
@@ -47,23 +60,25 @@ function Auth({ onClose }: Props) {
         return;
       }
 
-      // Supabase silently returns 200 for already-registered emails.
-      // An existing account comes back with an empty identities array.
-      if (data.user && data.user.identities && data.user.identities.length === 0) {
+      // If email already exists
+      if (
+        data.user &&
+        data.user.identities &&
+        data.user.identities.length === 0
+      ) {
         setErrorMessage("Email already registered. Please sign in instead.");
         setLoading(false);
         return;
       }
 
-      navigate("/email-sent", { state: { email } });
+      navigate("/email-sent", { state: { email: cleanEmail } });
       setEmail("");
       setPassword("");
       setLoading(false);
       return;
-
     } else {
       const { error } = await supabase.auth.signInWithPassword({
-        email,
+        email: cleanEmail,
         password,
       });
 
@@ -79,82 +94,74 @@ function Auth({ onClose }: Props) {
   }
 
   return (
-    <>
-      <div className={style.loginContainer}>
-        <div className={`${style.loginCard}`}>
-          <div className={style.closeBtn}>
-            <button onClick={onClose}>X</button>
-          </div>
-          <img src={logoIcon} className={style.logoImg} alt="NTUConnect Logo" />
-          <h2>NTUConnect</h2>
+    <div className={style.loginContainer}>
+      <div className={style.loginCard}>
+        <div className={style.closeBtn}>
+          <button onClick={onClose}>X</button>
+        </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className={style.inputForm}>
+        <img src={logoIcon} className={style.logoImg} alt="NTUConnect Logo" />
+        <h2>NTUConnect</h2>
+
+        <form onSubmit={handleSubmit}>
+          <div className={style.inputForm}>
+            <input
+              type="email"
+              placeholder="e.g. 23ntucsfl1002@student.ntu.edu.pk"
+              value={email}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setEmail(e.target.value)
+              }
+            />
+
+            <div className={style.passwordWrapper}>
               <input
-                type="email"
-                placeholder="e.g. 23ntucsfl1000@student.edu.pk"
-                value={email}
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                value={password}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setEmail(e.target.value)
+                  setPassword(e.target.value)
                 }
               />
 
-              <div className={style.passwordWrapper}>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setPassword(e.target.value)
-                  }
-                />
+              <button type="button" onClick={() => setShowPassword((p) => !p)}>
+                {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+              </button>
+            </div>
 
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((p) => !p)}
-                >
-                  {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
-                </button>
-              </div>
+            {errorMessage && <p className={style.error}>{errorMessage}</p>}
 
-              {errorMessage && (
-                <p className={style.error}>{errorMessage}</p>
+            <button
+              className={style.signInButton}
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? (
+                <span className="spinner"></span>
+              ) : isSignUp ? (
+                "Sign Up"
+              ) : (
+                "Sign In"
               )}
+            </button>
+          </div>
 
-              <button
-                className={loading ? "spinner" : style.signInButton}
-                type="submit"
-                disabled={loading}
-              >
-                {loading ? (
-                  <span className="spinner"></span>
-                ) : isSignUp ? (
-                  "Sign Up"
-                ) : (
-                  "Sign In"
-                )}
-              </button>
-            </div>
+          <div className={style.footer}>
+            <small>
+              {isSignUp ? "Already have an account?" : "Don't have an account?"}
+            </small>
 
-            <div className={style.footer}>
-              <small>
-                {isSignUp
-                  ? "Already have an account?"
-                  : "Don't have an account?"}
-              </small>
-
-              <button
-                type="button"
-                className={style.signInButton}
-                onClick={() => setIsSignUp((p) => !p)}
-              >
-                {isSignUp ? "Sign In" : "Sign Up"}
-              </button>
-            </div>
-          </form>
-        </div>
+            <button
+              type="button"
+              className={style.signInButton}
+              onClick={() => setIsSignUp((p) => !p)}
+            >
+              {isSignUp ? "Sign In" : "Sign Up"}
+            </button>
+          </div>
+        </form>
       </div>
-    </>
+    </div>
   );
 }
 
