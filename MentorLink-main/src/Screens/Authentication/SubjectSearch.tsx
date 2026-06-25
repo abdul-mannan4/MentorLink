@@ -67,7 +67,7 @@ const subjects = [
   "Professional Practices",
   "Probability and Statistics",
   "Introduction to Textiles",
-
+  "Web Application Development",
   "Applied Physics",
   "Islamic Studies",
   "Electric Circuits",
