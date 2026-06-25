@@ -34,12 +34,36 @@ interface DecoratedChatRequest extends ChatRequest {
 
 export default function ChatWidget() {
   const location = useLocation();
-  const isStudentDashboard = 
-    location.pathname.includes("student") || 
-    location.pathname.includes("userDashboard") || 
-    location.pathname.startsWith("/mentor/") || 
-    location.pathname.startsWith("/question/") || 
+
+  // Only show on student-mode pages, never on mentor-dashboard or any mentor-mode route
+  const isStudentPage =
+    location.pathname.includes("student") ||
+    location.pathname.includes("userDashboard") ||
+    location.pathname.startsWith("/mentor/") ||
+    location.pathname.startsWith("/question/") ||
     location.pathname === "/profile";
+
+  // Read the role the user is currently acting in (set by mode-switch buttons throughout the app)
+  const [activeMode, setActiveMode] = useState<string>(
+    () => sessionStorage.getItem("activeMode") || "student"
+  );
+
+  // Keep activeMode in sync whenever another component writes to sessionStorage
+  useEffect(() => {
+    const onStorage = () => {
+      setActiveMode(sessionStorage.getItem("activeMode") || "student");
+    };
+    window.addEventListener("storage", onStorage);
+    window.addEventListener("activeModeChanged", onStorage);
+    // Also poll once on mount in case the value was set before this component mounted
+    setActiveMode(sessionStorage.getItem("activeMode") || "student");
+    return () => {
+      window.removeEventListener("storage", onStorage);
+      window.removeEventListener("activeModeChanged", onStorage);
+    };
+  }, []);
+
+  const isStudentDashboard = isStudentPage && activeMode !== "mentor";
 
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"chats" | "requests">("chats");

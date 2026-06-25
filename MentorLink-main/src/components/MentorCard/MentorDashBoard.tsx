@@ -123,6 +123,7 @@ export default function MentorDashboard() {
 
   const handleSwitchToStudent = () => {
     sessionStorage.setItem("activeMode", "student");
+    window.dispatchEvent(new Event("activeModeChanged"));
     navigate("/student", { replace: true });
   };
 

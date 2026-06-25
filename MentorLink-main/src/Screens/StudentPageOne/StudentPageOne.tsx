@@ -202,6 +202,7 @@ const StudentPageOne = () => {
   const handleSwitchToMentor = () => {
     if (isMentor) {
       sessionStorage.setItem("activeMode", "mentor");
+      window.dispatchEvent(new Event("activeModeChanged"));
       navigate("/mentor-dashboard", { replace: true });
     } else {
       navigate("/mentor-profile", { replace: true });
