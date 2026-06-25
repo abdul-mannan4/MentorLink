@@ -44,7 +44,7 @@ function Auth({ onClose }: Props) {
 
     if (!isValidStudentEmail(email)) {
       setErrorMessage(
-        "Invalid email format. Use: 23ntucsfl1003@student.ntu.edu.pk"
+        "Invalid email format. Use: 23ntu(cs|ct)fl1003@student.ntu.edu.pk"
       );
       setLoading(false);
       return;
