@@ -211,11 +211,29 @@ async function decorateAndFilterChats(rawChats: Chat[], userId: string, role: "s
   );
 
   const threeDaysInMs = 3 * 24 * 60 * 60 * 1000;
-  return decorated.filter((chat) => {
+  const activeChats = decorated.filter((chat) => {
     const creationTime = new Date(chat.created_at).getTime();
     const messageTime = chat.latest_message_time ? new Date(chat.latest_message_time).getTime() : 0;
     const latestActivity = Math.max(creationTime, messageTime);
     return Date.now() - latestActivity <= threeDaysInMs;
+  });
+
+  // Sort active chats by latest activity (message or creation) descending
+  activeChats.sort((a, b) => {
+    const timeA = Math.max(new Date(a.created_at).getTime(), a.latest_message_time ? new Date(a.latest_message_time).getTime() : 0);
+    const timeB = Math.max(new Date(b.created_at).getTime(), b.latest_message_time ? new Date(b.latest_message_time).getTime() : 0);
+    return timeB - timeA;
+  });
+
+  // De-duplicate by peer_id to ensure only one active chat per peer is displayed
+  const seenPeers = new Set<string>();
+  return activeChats.filter((chat) => {
+    if (!chat.peer_id) return true;
+    if (seenPeers.has(chat.peer_id)) {
+      return false;
+    }
+    seenPeers.add(chat.peer_id);
+    return true;
   });
 }
 
